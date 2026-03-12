@@ -1,0 +1,4 @@
+# netlify.toml
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["src/types/**/*"]
