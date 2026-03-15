@@ -115,7 +115,7 @@ const Navbar = () => {
                   <img
                     src="/images/timigaga-logo-full.png"
                     alt="Timigaga Studios"
-                    className="h-15 w-auto object-contain"
+                    className="h-35 w-auto object-contain"
                   />
                 </Link>
 
