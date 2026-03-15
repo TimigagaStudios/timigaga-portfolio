@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Code, PenTool, Zap } from 'lucide-react';
 import SectionWrapper from '@/components/SectionWrapper';
 import Button from '@/components/Button';
@@ -9,295 +8,280 @@ import ServiceCard from '@/components/ServiceCard';
 const Home = () => {
   return (
     <div className="bg-black text-white overflow-hidden">
-      {/* Cinematic Hero */}
-      <section className="relative min-h-screen flex items-center justify-center py-10 overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent to-black opacity-90 z-1"></div>
-        <div className="absolute inset-0 dots-pattern opacity-[0.05] z-0"></div>
-        
-        {/* Animated Background Blobs */}
-        <motion.div 
-          animate={{ 
-            x: [0, 50, 0], 
-            y: [0, 30, 0],
-            scale: [1, 1.2, 1] 
+      {/* Hero Section */}
+      <section className="relative min-h-screen bg-black overflow-hidden pt-28 pb-16">
+        <div className="absolute inset-0 dots-pattern opacity-[0.04]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(149,239,144,0.08),transparent_35%)]" />
+
+        <motion.div
+          animate={{
+            x: [0, 40, 0],
+            y: [0, 25, 0],
+            scale: [1, 1.08, 1],
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-[#95EF90]/5 rounded-full blur-[120px] z-0"
-        />
-        <motion.div 
-          animate={{ 
-            x: [0, -50, 0], 
-            y: [0, -30, 0],
-            scale: [1, 1.3, 1] 
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-[#8A898A]/5 rounded-full blur-[150px] z-0"
+          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-10 left-[-120px] w-[420px] h-[420px] bg-[#95EF90]/6 rounded-full blur-[120px]"
         />
 
-        {/* Giant Background Typography */}
-        <div className="absolute inset-0 flex items-center justify-center z-0 select-none overflow-hidden">
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.08, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="text-[20vw] font-black tracking-tighter text-outline whitespace-nowrap font-heading"
+        <motion.div
+          animate={{
+            x: [0, -30, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-0 right-[-140px] w-[500px] h-[500px] bg-[#95EF90]/5 rounded-full blur-[140px]"
+        />
+
+        <SectionWrapper>
+          {/* Top CTA Pills */}
+          <motion.div
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-4 mb-14"
           >
-            TIMIGAGA
-          </motion.h1>
-        </div>
+            <Button
+              href="/portfolio"
+              variant="aura"
+              size="sm"
+              className="text-xs md:text-sm"
+            >
+              See my work
+            </Button>
+            <Button
+              href="/services"
+              variant="aura"
+              size="sm"
+              className="text-xs md:text-sm"
+            >
+              My catalog
+            </Button>
+            <Button
+              href="/contact"
+              variant="aura"
+              size="sm"
+              className="text-xs md:text-sm"
+            >
+              Book a service
+            </Button>
+          </motion.div>
 
-        <div className="max-w-7xl mx-auto px-4 w-full relative z-10 pt-20 lg:pt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            {/* Left Content Column */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              {/* Creative DNA Card */}
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="glass-dark p-6 md:p-8 rounded-3xl"
-              >
-                <h3 className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-[#95EF90] mb-4 font-heading">Creative DNA</h3>
-                <div className="flex gap-6 mb-6">
-                  <div>
-                    <span className="text-xl md:text-2xl font-black block font-heading">150+</span>
-                    <span className="text-[10px] text-gray-400 font-semibold uppercase font-heading">Projects</span>
-                  </div>
-                  <div>
-                    <span className="text-xl md:text-2xl font-black block font-heading">10+</span>
-                    <span className="text-[10px] text-gray-400 font-semibold uppercase font-heading">Awards</span>
-                  </div>
-                  <div>
-                    <span className="text-xl md:text-2xl font-black block font-heading">1</span>
-                    <span className="text-[10px] text-gray-400 font-semibold uppercase font-heading">Obsession</span>
-                  </div>
-                </div>
-                <p className="text-gray-400 leading-relaxed text-sm md:text-base font-body">
-                  We are a fusion of art and technology, building high-performance digital systems that command respect on the global stage.
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            {/* Left Intro */}
+            <motion.div
+              initial={{ opacity: 0, x: -28 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="lg:col-span-3 order-2 lg:order-1"
+            >
+              <div className="border-t border-[#95EF90]/30 pt-5 max-w-xs">
+                <p className="text-xl md:text-2xl leading-tight text-white/90 font-light tracking-tight">
+                  Web Developer,
+                  <br />
+                  Brand Designer
+                  <br />& Creative Technologist
                 </p>
-              </motion.div>
+              </div>
+            </motion.div>
 
-              {/* Portfolio Link Card */}
-              <Link to="/portfolio">
-                <motion.div 
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="glass-dark p-6 rounded-3xl flex items-center gap-6 group cursor-pointer border border-white/5 hover:border-[#95EF90]/30 transition-all"
-                >
-                  <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-[20%] flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-transform group-hover:scale-105 shrink-0">
-                    <span className="text-black font-black text-2xl md:text-3xl leading-none pt-1 font-heading">T</span>
-                  </div>
-                  <div>
-                    <h4 className="font-black uppercase tracking-tight font-heading text-sm md:text-base">VIEW PORTFOLIO</h4>
-                    <p className="text-[10px] md:text-xs text-[#95EF90] font-bold uppercase tracking-widest opacity-80 font-heading">Click to explore our work</p>
-                  </div>
-                  <ArrowRight className="ml-auto text-gray-500 group-hover:translate-x-1 transition-transform group-hover:text-[#95EF90]" />
-                </motion.div>
-              </Link>
+            {/* Middle Hero */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="lg:col-span-6 order-1 lg:order-2 flex flex-col items-center text-center relative"
+            >
+              <div className="relative w-full flex justify-center">
+                <div className="absolute inset-0 bg-[#95EF90]/8 blur-[100px] rounded-full scale-110" />
 
-              {/* Tech Arsenal Card */}
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="glass-dark p-6 md:p-8 rounded-3xl"
-              >
-                <h3 className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-[#95EF90] mb-6 font-heading">Tech Arsenal</h3>
-                <div className="grid grid-cols-4 gap-y-10 gap-x-4 grayscale group">
-                   {/* Row 1 */}
-                   <div className="flex items-center justify-center">
-                     <svg viewBox="0 0 24 24" className="h-7 w-auto text-white hover:text-[#95EF90] transition-all" fill="currentColor">
-                       <path d="M13.4,12l6.2,6.2l-1.4,1.4L12,13.4l-6.2,6.2l-1.4,-1.4L10.6,12L4.4,5.8l1.4,-1.4L12,10.6l6.2,-6.2l1.4,1.4L13.4,12z"/>
-                     </svg>
-                   </div>
-                   <img src="https://www.vectorlogo.zone/logos/github/github-tile.svg" alt="GitHub" className="h-7 w-auto mx-auto invert group-hover:grayscale-0 transition-all" />
-                   <img src="https://www.vectorlogo.zone/logos/netlify/netlify-icon.svg" alt="Netlify" className="h-7 w-auto mx-auto group-hover:grayscale-0 transition-all" />
-                   <div className="flex items-center justify-center">
-                     <svg viewBox="0 0 24 24" className="h-7 w-auto text-white hover:text-[#95EF90] transition-all" fill="currentColor">
-                       <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/>
-                     </svg>
-                   </div>
-                   
-                   {/* Row 2 */}
-                   <img src="https://www.vectorlogo.zone/logos/supabase/supabase-icon.svg" alt="Supabase" className="h-7 w-auto mx-auto group-hover:grayscale-0 transition-all" />
-                   <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="Tailwind" className="h-7 w-auto mx-auto group-hover:grayscale-0 transition-all" />
-                   <img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" alt="React" className="h-7 w-auto mx-auto group-hover:grayscale-0 transition-all" />
-                   <img src="https://www.vectorlogo.zone/logos/visualstudio_code/visualstudio_code-icon.svg" alt="VSCode" className="h-7 w-auto mx-auto group-hover:grayscale-0 transition-all" />
+                <div className="relative z-10 w-[260px] sm:w-[300px] md:w-[360px] aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-b from-[#151515] to-[#080808] shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
+                  <img
+                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1974&auto=format&fit=crop"
+                    alt="Timigaga Studios creative portrait"
+                    className="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700"
+                  />
                 </div>
-              </motion.div>
-            </div>
+              </div>
 
-            {/* Middle Portrait Column */}
-            <div className="lg:col-span-3 flex justify-center relative">
-               <motion.div 
-                 initial={{ opacity: 0, y: 100 }}
-                 animate={{ 
-                   opacity: 1, 
-                   y: [0, -20, 0],
-                 }}
-                 transition={{ 
-                   opacity: { duration: 1 },
-                   y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
-                 }}
-                 className="relative z-10"
-               >
-                 {/* Glow behind portrait */}
-                 <div className="absolute inset-0 bg-[#95EF90]/10 blur-[100px] rounded-full scale-150"></div>
+              <div className="mt-6">
+                <p className="text-[#95EF90] uppercase tracking-[0.6em] text-xs md:text-sm mb-3">
+                  Timothy Buoro
+                </p>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] font-semibold tracking-tighter leading-none">
+                  Timigaga
+                </h1>
+                <p className="text-base md:text-lg text-white/60 mt-4 max-w-xl mx-auto leading-8">
+                  Build. Design. Innovate.
+                </p>
+              </div>
+            </motion.div>
 
-                 <div className="w-[300px] h-[450px] bg-gradient-to-b from-gray-900 to-black rounded-full overflow-hidden border-2 border-white/10 relative shadow-2xl z-20">
-                    <img 
-                      src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1974&auto=format&fit=crop" 
-                      alt="Creative Director" 
-                      className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 hover:brightness-100 transition-all duration-700 scale-105"
-                    />
-                 </div>
-                 {/* Circular Text Badge */}
-                 <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-1/2 -right-16 -translate-y-1/2 w-44 h-44 flex items-center justify-center z-30 pointer-events-none"
-                 >
-                    <svg viewBox="0 0 100 100" className="w-full h-full text-[#95EF90] font-black fill-current opacity-80">
-                      <path id="circlePath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="none" />
-                      <text fontSize="7.5" className="tracking-[0.25em] uppercase">
-                        <textPath href="#circlePath">BUILD • DESIGN • INNOVATE • PREMIUM STUDIO • </textPath>
-                      </text>
-                    </svg>
-                 </motion.div>
-               </motion.div>
-            </div>
+            {/* Right Intro */}
+            <motion.div
+              initial={{ opacity: 0, x: 28 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="lg:col-span-3 order-3"
+            >
+              <div className="max-w-sm ml-auto">
+                <p className="text-base md:text-lg text-white/80 leading-8">
+                  Hi, I’m Timothy — founder of Timigaga Studios. I design and
+                  build modern digital experiences for brands that want premium
+                  positioning, stronger online presence, and world-class visual
+                  execution.
+                </p>
+              </div>
+            </motion.div>
+          </div>
 
-            {/* Right Column (Journey & Skills) */}
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="glass-dark p-8 rounded-3xl"
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h3 className="text-xl font-black">CREATIVE JOURNEY</h3>
-                    <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Experience Path</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="border-l-2 border-[#95EF90]/40 pl-4 py-1">
-                    <h4 className="text-sm font-bold text-[#95EF90]">LEAD AI DEVELOPER</h4>
-                    <p className="text-xs font-medium text-gray-300">Timigaga Studios</p>
-                    <p className="text-[10px] text-gray-500 uppercase">2021 — PRESENT</p>
-                  </div>
-                  <div className="border-l-2 border-white/10 pl-4 py-1">
-                    <h4 className="text-sm font-bold text-gray-200">SENIOR DESIGN STRATEGIST</h4>
-                    <p className="text-xs font-medium text-gray-400">International Media Group</p>
-                    <p className="text-[10px] text-gray-500 uppercase">2018 — 2021</p>
-                  </div>
-                </div>
-              </motion.div>
+          {/* Brand / Tools row */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="mt-14 flex flex-wrap justify-center gap-x-8 gap-y-4 text-white/25 text-sm md:text-base"
+          >
+            <span>React</span>
+            <span>Next.js</span>
+            <span>Supabase</span>
+            <span>Tailwind</span>
+            <span>Netlify</span>
+            <span>Brevo</span>
+          </motion.div>
+        </SectionWrapper>
+      </section>
 
-              <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="glass-dark p-6 md:p-8 rounded-3xl"
-              >
-                <h3 className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-[#95EF90] mb-6 font-heading">Mastery</h3>
-                <div className="flex flex-wrap gap-2">
-                  {['Next.js 15', 'Branding', 'UI Architecture', 'AI Engineering', 'Cinematography', '3D Interaction', 'Product Strategy'].map(skill => (
-                    <span key={skill} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] md:text-[10px] font-bold text-gray-300 hover:border-[#95EF90]/50 transition-colors cursor-default uppercase tracking-widest font-heading">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
+      {/* Intro Statement */}
+      <section className="py-16 md:py-24 bg-black">
+        <SectionWrapper>
+          <div className="max-w-5xl">
+            <div className="border-t border-[#95EF90]/25 pt-8">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-medium text-white">
+                Crafting premium websites, digital products, visual branding,
+                and modern creative systems for ambitious businesses.
+              </h2>
+              <p className="mt-6 max-w-3xl text-white/55 text-base md:text-lg leading-8">
+                Timigaga Studios combines strategy, design, development, and AI-assisted
+                execution to help brands launch faster, look sharper, and compete
+                at a higher level.
+              </p>
             </div>
           </div>
-        </div>
+        </SectionWrapper>
       </section>
 
       {/* Services Section */}
-      <section className="py-16 relative bg-black">
-         <SectionWrapper>
-           <div className="mb-12 text-center">
-             <motion.h2 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="text-4xl md:text-7xl font-bold mb-6 tracking-tighter uppercase"
-             >
-               EXPERTISE<span className="text-[#95EF90]">.</span>
-             </motion.h2>
-             <p className="text-gray-400 max-w-2xl mx-auto text-sm uppercase tracking-widest font-semibold">We redefine the boundaries of digital possibility.</p>
-           </div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <ServiceCard 
-               title="ECOMMERCE ELITE" 
-               description="Hyper-fast storefronts built on Next.js 15 for brands that demand performance."
-               icon={<Code size={32} />}
-             />
-             <ServiceCard 
-               title="CINEMATIC BRANDING" 
-               description="Visual identities that command authority and communicate international scale."
-               icon={<PenTool size={32} />}
-             />
-             <ServiceCard 
-               title="AI ARCHITECTURE" 
-               description="Integrating LLMs and custom AI workflows to automate elite studio production."
-               icon={<Zap size={32} />}
-             />
-           </div>
-         </SectionWrapper>
+      <section className="py-16 md:py-20 bg-black">
+        <SectionWrapper>
+          <div className="mb-12">
+            <p className="text-[#95EF90] uppercase tracking-[0.4em] text-xs mb-4">
+              What I do
+            </p>
+            <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
+              Services built for modern brands.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ServiceCard
+              title="Website Design & Development"
+              description="Fast, polished, conversion-focused websites designed to help your brand stand out and scale."
+              icon={<Code size={30} />}
+            />
+            <ServiceCard
+              title="Brand Identity & Visual Design"
+              description="Distinct brand systems, digital assets, and creative direction that communicate professionalism."
+              icon={<PenTool size={30} />}
+            />
+            <ServiceCard
+              title="AI Workflow & Creative Systems"
+              description="AI-assisted processes and smart tools to streamline delivery, outreach, and production."
+              icon={<Zap size={30} />}
+            />
+          </div>
+        </SectionWrapper>
       </section>
 
       {/* Projects Section */}
-      <section className="py-16 relative bg-black">
-         <SectionWrapper>
-           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
-             <div>
-               <h2 className="text-4xl md:text-6xl font-bold mb-4 tracking-tighter uppercase">SELECTED WORK<span className="text-[#95EF90]">.</span></h2>
-               <p className="text-gray-500 text-xs font-semibold uppercase tracking-[0.3em]">A legacy of digital excellence.</p>
-             </div>
-             <Button href="/portfolio" variant="aura" size="md" className="uppercase tracking-[0.2em] font-bold text-[10px] px-10">
-               THE FULL ARCHIVE
-             </Button>
-           </div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <ProjectCard 
-               id="architectural-boutique"
-               title="STRUCTURA" 
-               category="WEB ARCHITECTURE" 
-               image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
-             />
-             <ProjectCard 
-               id="ai-music-platform"
-               title="SONIC.AI" 
-               category="AI PLATFORM" 
-               image="https://images.unsplash.com/photo-1614149162883-504ce4d13909?q=80&w=2070&auto=format&fit=crop"
-             />
-           </div>
-         </SectionWrapper>
+      <section className="py-16 md:py-20 bg-black">
+        <SectionWrapper>
+          <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-12">
+            <div>
+              <p className="text-[#95EF90] uppercase tracking-[0.4em] text-xs mb-4">
+                Portfolio
+              </p>
+              <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
+                Selected work.
+              </h2>
+            </div>
+
+            <Button
+              href="/portfolio"
+              variant="aura"
+              size="md"
+              className="uppercase tracking-[0.16em] text-[11px] font-semibold px-8"
+            >
+              View portfolio
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ProjectCard
+              id="architectural-boutique"
+              title="Structura"
+              category="Web Architecture"
+              image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+            />
+            <ProjectCard
+              id="ai-music-platform"
+              title="Sonic AI"
+              category="AI Platform"
+              image="https://images.unsplash.com/photo-1614149162883-504ce4d13909?q=80&w=2070&auto=format&fit=crop"
+            />
+          </div>
+        </SectionWrapper>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-black text-center relative overflow-hidden border-t border-white/5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#95EF90]/5 rounded-full blur-[120px]"></div>
-        <div className="max-w-4xl mx-auto px-4 relative z-10">
-          <h2 className="text-5xl md:text-8xl font-bold mb-8 tracking-tighter uppercase leading-none">BUILD THE<br />FUTURE<span className="text-[#95EF90]">.</span></h2>
-          <p className="text-lg text-gray-400 mb-10 max-w-lg mx-auto leading-relaxed uppercase tracking-wide font-normal">
-            Join the elite circle of founders who choose Timigaga for world-class digital production.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Button href="/intake" variant="aura" size="lg" className="px-12 py-5 text-sm uppercase tracking-[0.2em] font-bold">
-              START A PROJECT <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button href="/contact" variant="outline" size="lg" className="px-12 py-5 text-sm uppercase tracking-[0.2em] font-bold">GET IN TOUCH</Button>
+      {/* Final CTA */}
+      <section className="py-24 bg-black relative overflow-hidden border-t border-white/5">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] bg-[#95EF90]/5 rounded-full blur-[120px]" />
+
+        <SectionWrapper>
+          <div className="relative z-10 text-center max-w-4xl mx-auto">
+            <h2 className="text-4xl md:text-7xl font-semibold tracking-tight leading-none mb-6">
+              Ready to build
+              <br />
+              something exceptional?
+            </h2>
+
+            <p className="text-white/60 text-base md:text-lg leading-8 max-w-2xl mx-auto mb-10">
+              Let’s create a digital experience that looks premium, performs
+              beautifully, and helps your brand move with confidence.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-5">
+              <Button
+                href="/intake"
+                variant="aura"
+                size="lg"
+                className="px-10 py-5 text-sm uppercase tracking-[0.18em] font-semibold"
+              >
+                Start a project
+                <ArrowRight size={18} className="ml-2" />
+              </Button>
+
+              <Button
+                href="/contact"
+                variant="outline"
+                size="lg"
+                className="px-10 py-5 text-sm uppercase tracking-[0.18em] font-semibold"
+              >
+                Get in touch
+              </Button>
+            </div>
           </div>
-        </div>
+        </SectionWrapper>
       </section>
     </div>
   );
