@@ -44,7 +44,7 @@ const Navbar = () => {
           <img
             src="/images/timigaga-logo-full.png"
             alt="Timigaga Studios"
-            className="h-15 md:h-16 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+            className="h-35 md:h-36 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
           />
         </Link>
 
