@@ -40,19 +40,12 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-white rounded-[18%] flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.18)] shrink-0">
-            <span className="text-black font-bold text-lg leading-none">T</span>
-          </div>
-
-          <div className="flex flex-col leading-none">
-            <span className="text-[1rem] md:text-[1.05rem] font-semibold tracking-[-0.04em] text-white font-heading transition-colors duration-300 group-hover:text-[#95EF90]">
-              Timigaga
-            </span>
-            <span className="text-[9px] md:text-[10px] font-medium tracking-[0.34em] text-white/45 uppercase mt-1">
-              Studios
-            </span>
-          </div>
+        <Link to="/" className="flex items-center group">
+          <img
+            src="/images/timigaga-logo-full.png"
+            alt="Timigaga Studios"
+            className="h-10 md:h-11 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -88,11 +81,11 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(true)}
             className="text-white hover:text-[#95EF90] focus:outline-none relative z-[110] p-2 transition-transform active:scale-95"
-            aria-label="Toggle Menu"
+            aria-label="Open Menu"
           >
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
+            <Menu size={26} />
           </button>
         </div>
       </div>
@@ -118,19 +111,12 @@ const Navbar = () => {
               className="fixed top-0 right-0 bottom-0 w-full z-[102] bg-[#050505] flex flex-col p-6 sm:p-8 md:hidden overflow-y-auto"
             >
               <div className="flex items-center justify-between pt-2 mb-12">
-                <Link to="/" className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-white rounded-[18%] flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.18)]">
-                    <span className="text-black font-bold text-base leading-none">T</span>
-                  </div>
-
-                  <div className="flex flex-col leading-none">
-                    <span className="text-[1rem] font-semibold tracking-[-0.04em] text-white font-heading">
-                      Timigaga
-                    </span>
-                    <span className="text-[9px] tracking-[0.32em] uppercase text-white/45 mt-1">
-                      Studios
-                    </span>
-                  </div>
+                <Link to="/" className="flex items-center">
+                  <img
+                    src="/images/timigaga-logo-full.png"
+                    alt="Timigaga Studios"
+                    className="h-10 w-auto object-contain"
+                  />
                 </Link>
 
                 <button
