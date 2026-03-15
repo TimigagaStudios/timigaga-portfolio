@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 type ClientRequestPayload = {
   name: string;
@@ -22,7 +23,14 @@ const brevoSenderName = process.env.BREVO_SENDER_NAME as string;
 const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL as string;
 const adminNotificationEmail = process.env.ADMIN_NOTIFICATION_EMAIL as string;
 
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+function validateEnv() {
+  if (!supabaseUrl) throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL');
+  if (!supabaseServiceRoleKey) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+  if (!brevoApiKey) throw new Error('Missing BREVO_API_KEY');
+  if (!brevoSenderName) throw new Error('Missing BREVO_SENDER_NAME');
+  if (!brevoSenderEmail) throw new Error('Missing BREVO_SENDER_EMAIL');
+  if (!adminNotificationEmail) throw new Error('Missing ADMIN_NOTIFICATION_EMAIL');
+}
 
 function validatePayload(body: Partial<ClientRequestPayload>) {
   if (!body.name || !body.name.trim()) return 'Name is required';
@@ -54,12 +62,7 @@ async function sendBrevoEmail({
         name: brevoSenderName,
         email: brevoSenderEmail,
       },
-      to: [
-        {
-          email: toEmail,
-          name: toName,
-        },
-      ],
+      to: [{ email: toEmail, name: toName }],
       subject,
       htmlContent,
     }),
@@ -73,7 +76,7 @@ async function sendBrevoEmail({
   return response.json();
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false,
@@ -82,8 +85,11 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const body = req.body as ClientRequestPayload;
+    validateEnv();
 
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+    const body = req.body as ClientRequestPayload;
     const validationError = validatePayload(body);
 
     if (validationError) {
@@ -179,7 +185,7 @@ export default async function handler(req: any, res: any) {
     console.error('API error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 }
