@@ -47,7 +47,11 @@ const IntakeForm = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setReferenceFiles(files);
+    setReferenceFiles((prev) => [...prev, ...files]);
+  };
+
+  const removeReferenceFile = (indexToRemove: number) => {
+    setReferenceFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const uploadReferenceImages = async () => {
@@ -74,7 +78,9 @@ const IntakeForm = () => {
           throw new Error(error.message);
         }
 
-        const { data } = supabase.storage.from('client-references').getPublicUrl(filePath);
+        const { data } = supabase.storage
+          .from('client-references')
+          .getPublicUrl(filePath);
 
         if (data?.publicUrl) {
           uploadedUrls.push(data.publicUrl);
@@ -276,19 +282,15 @@ ${formData.message}
         </div>
 
         <div>
-          <label className={labelClasses}>Estimated Budget</label>
-          <select
+          <label className={labelClasses}>Budget</label>
+          <input
+            type="text"
             name="budget"
             value={formData.budget}
             onChange={handleChange}
             className={inputClasses}
-          >
-            <option value="">Select range</option>
-            <option value="$1,000 - $5,000">$1,000 - $5,000</option>
-            <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-            <option value="$10,000 - $25,000">$10,000 - $25,000</option>
-            <option value="$25,000+">$25,000+</option>
-          </select>
+            placeholder="e.g. ₦150,000, $300, Flexible, Need quote"
+          />
         </div>
 
         <div>
@@ -343,12 +345,23 @@ ${formData.message}
             onChange={handleFileChange}
             className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white/70 file:mr-4 file:rounded-full file:border-0 file:bg-[#95EF90] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:opacity-90"
           />
+
           {referenceFiles.length > 0 && (
-            <div className="mt-4 space-y-2">
+            <div className="mt-4 space-y-3">
               {referenceFiles.map((file, index) => (
-                <p key={`${file.name}-${index}`} className="text-sm text-white/55">
-                  {file.name}
-                </p>
+                <div
+                  key={`${file.name}-${index}`}
+                  className="flex items-center justify-between rounded-xl border border-white/8 bg-white/5 px-4 py-3"
+                >
+                  <p className="text-sm text-white/65 truncate pr-4">{file.name}</p>
+                  <button
+                    type="button"
+                    onClick={() => removeReferenceFile(index)}
+                    className="text-xs uppercase tracking-[0.18em] text-red-300 hover:text-red-200 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
               ))}
             </div>
           )}
