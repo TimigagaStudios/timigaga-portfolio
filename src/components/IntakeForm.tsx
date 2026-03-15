@@ -2,180 +2,318 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from './Button';
 
+type IntakeFormData = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  country: string;
+  project_category: string;
+  budget: string;
+  message: string;
+  timeline: string;
+  style_preference: string;
+  theme: string;
+};
+
 const IntakeForm = () => {
-  const [formData, setFormData] = useState({
-    fullName: '',
+  const [formData, setFormData] = useState<IntakeFormData>({
+    name: '',
     email: '',
     phone: '',
     company: '',
     country: '',
-    projectType: [] as string[],
+    project_category: '',
     budget: '',
-    description: '',
+    message: '',
     timeline: '',
-    designStyle: '',
+    style_preference: '',
     theme: '',
-    inspiration: '',
-    features: [] as string[],
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, checked } = e.target;
-    if (name === 'projectType') {
-      setFormData(prev => ({
-        ...prev,
-        projectType: checked 
-          ? [...prev.projectType, value]
-          : prev.projectType.filter(item => item !== value)
-      }));
-    } else if (name === 'features') {
-      setFormData(prev => ({
-        ...prev,
-        features: checked
-          ? [...prev.features, value]
-          : prev.features.filter(item => item !== value)
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    console.log('Form Submitted:', formData);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          project_category: formData.project_category,
+          budget: formData.budget,
+          style_preference: formData.style_preference,
+          theme: formData.theme,
+          message: `
+Location / Country: ${formData.country || 'N/A'}
+Timeline: ${formData.timeline || 'N/A'}
+
+Project Brief:
+${formData.message}
+          `.trim(),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Submission failed');
+      }
+
+      setIsSuccess(true);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        country: '',
+        project_category: '',
+        budget: '',
+        message: '',
+        timeline: '',
+        style_preference: '',
+        theme: '',
+      });
+    } catch (error) {
+      console.error(error);
+      setSubmitError('Something went wrong while submitting your request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {
     return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-32 glass-dark rounded-[3rem] border border-[#95EF90]/30"
+        className="text-center py-20 md:py-24 glass-dark rounded-[2rem] md:rounded-[2.5rem] border border-[#95EF90]/20"
       >
-        <h3 className="text-5xl font-bold text-white mb-6 tracking-tighter">SUCCESS<span className="text-[#95EF90]">.</span></h3>
-        <p className="text-gray-400 max-w-md mx-auto mb-10 text-sm leading-relaxed font-normal">
-          Your vision has been transmitted. Our lead strategist will review your requirements and reach out within 24 hours.
+        <h3 className="text-3xl md:text-5xl font-semibold text-white mb-5 tracking-tight">
+          Request received<span className="text-[#95EF90]">.</span>
+        </h3>
+
+        <p className="text-white/60 max-w-md mx-auto mb-8 text-sm md:text-base leading-8">
+          Your project request has been submitted successfully. Timigaga Studios
+          will review it and get back to you as soon as possible.
         </p>
-        <Button onClick={() => setIsSuccess(false)} variant="aura" size="md" className="px-10 py-4 text-[10px] uppercase font-bold tracking-widest">
-          SUBMIT ANOTHER PROJECT
+
+        <Button
+          onClick={() => setIsSuccess(false)}
+          variant="aura"
+          size="md"
+          className="px-8 text-[11px] uppercase tracking-[0.18em] font-semibold"
+        >
+          Submit Another Request
         </Button>
       </motion.div>
     );
   }
 
-  const inputClasses = "w-full px-4 py-3 md:py-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-[#95EF90] focus:ring-1 focus:ring-[#95EF90] outline-none transition-all placeholder:text-gray-600 font-body text-sm md:text-base";
-  const labelClasses = "block text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-3 font-heading";
+  const inputClasses =
+    'w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3.5 text-white outline-none transition-all placeholder:text-white/25 focus:border-[#95EF90] focus:ring-1 focus:ring-[#95EF90] text-sm md:text-base';
+
+  const labelClasses =
+    'block text-[11px] uppercase tracking-[0.22em] text-white/40 mb-3';
 
   return (
-    <motion.form 
+    <motion.form
       onSubmit={handleSubmit}
-      className="space-y-8 md:space-y-12 glass-dark p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border border-white/5"
+      className="space-y-8 md:space-y-10 glass-dark p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.45 }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-7">
         <div>
           <label className={labelClasses}>Full Name</label>
-          <input required type="text" name="fullName" value={formData.fullName} onChange={handleChange} className={inputClasses} placeholder="Your Name" />
+          <input
+            required
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="Your name"
+          />
         </div>
+
         <div>
           <label className={labelClasses}>Email Address</label>
-          <input required type="email" name="email" value={formData.email} onChange={handleChange} className={inputClasses} placeholder="email@company.com" />
+          <input
+            required
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="email@company.com"
+          />
         </div>
+
         <div>
           <label className={labelClasses}>Phone Number</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className={inputClasses} placeholder="+1 (000) 000-0000" />
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="+234..."
+          />
         </div>
+
         <div>
-          <label className={labelClasses}>Company / Studio</label>
-          <input type="text" name="company" value={formData.company} onChange={handleChange} className={inputClasses} placeholder="Company Name" />
+          <label className={labelClasses}>Company / Brand</label>
+          <input
+            type="text"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="Company or brand name"
+          />
         </div>
+
         <div>
           <label className={labelClasses}>Location / Country</label>
-          <input type="text" name="country" value={formData.country} onChange={handleChange} className={inputClasses} placeholder="Where are you based?" />
+          <input
+            type="text"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="Where are you based?"
+          />
         </div>
+
+        <div>
+          <label className={labelClasses}>Project Category</label>
+          <select
+            required
+            name="project_category"
+            value={formData.project_category}
+            onChange={handleChange}
+            className={inputClasses}
+          >
+            <option value="">Select category</option>
+            <option value="Web Design">Web Design</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Brand Identity">Brand Identity</option>
+            <option value="UI/UX Design">UI/UX Design</option>
+            <option value="AI Workflow System">AI Workflow System</option>
+            <option value="Photography">Photography</option>
+            <option value="Cinematography">Cinematography</option>
+            <option value="Social Media Management">Social Media Management</option>
+          </select>
+        </div>
+
         <div>
           <label className={labelClasses}>Estimated Budget</label>
-          <select name="budget" value={formData.budget} onChange={handleChange} className={inputClasses}>
-            <option value="">Select Range</option>
-            <option value="<5k">$1,000 - $5,000</option>
-            <option value="5k-10k">$5,000 - $10,000</option>
-            <option value="10k-25k">$10,000 - $25,000</option>
-            <option value="25k+">$25,000+</option>
+          <select
+            name="budget"
+            value={formData.budget}
+            onChange={handleChange}
+            className={inputClasses}
+          >
+            <option value="">Select range</option>
+            <option value="$1,000 - $5,000">$1,000 - $5,000</option>
+            <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+            <option value="$10,000 - $25,000">$10,000 - $25,000</option>
+            <option value="$25,000+">$25,000+</option>
           </select>
         </div>
+
         <div>
           <label className={labelClasses}>Desired Timeline</label>
-          <select name="timeline" value={formData.timeline} onChange={handleChange} className={inputClasses}>
-            <option value="">Select Timeline</option>
-            <option value="urgent">Urgent (&lt; 2 weeks)</option>
-            <option value="1month">~ 1 Month</option>
-            <option value="3months">2-3 Months</option>
-            <option value="flexible">Flexible</option>
+          <select
+            name="timeline"
+            value={formData.timeline}
+            onChange={handleChange}
+            className={inputClasses}
+          >
+            <option value="">Select timeline</option>
+            <option value="Urgent (under 2 weeks)">Urgent (under 2 weeks)</option>
+            <option value="About 1 month">About 1 month</option>
+            <option value="2 to 3 months">2 to 3 months</option>
+            <option value="Flexible">Flexible</option>
           </select>
         </div>
-        <div>
+
+        <div className="md:col-span-2">
           <label className={labelClasses}>Preferred Style</label>
-          <input type="text" name="designStyle" value={formData.designStyle} onChange={handleChange} className={inputClasses} placeholder="e.g. Cinematic, Minimal, Bold" />
+          <input
+            type="text"
+            name="style_preference"
+            value={formData.style_preference}
+            onChange={handleChange}
+            className={inputClasses}
+            placeholder="Minimal, bold, cinematic, modern, luxury..."
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className={labelClasses}>Preferred Theme</label>
+          <select
+            name="theme"
+            value={formData.theme}
+            onChange={handleChange}
+            className={inputClasses}
+          >
+            <option value="">Select theme preference</option>
+            <option value="Dark">Dark</option>
+            <option value="Light">Light</option>
+            <option value="Not sure yet">Not sure yet</option>
+          </select>
+        </div>
+
+        <div className="md:col-span-2">
+          <label className={labelClasses}>Project Description</label>
+          <textarea
+            required
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows={7}
+            className={`${inputClasses} resize-none`}
+            placeholder="Describe your project goals, vision, audience, features, and any important details..."
+          />
         </div>
       </div>
 
-      <div>
-        <label className={labelClasses}>Project Type</label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {['Web Design', 'App Dev', 'Branding', 'UI/UX Design', 'AI Solutions', 'Cinematography'].map((type) => (
-            <label key={type} className={`flex items-center justify-between cursor-pointer p-4 rounded-xl border transition-all duration-300 ${formData.projectType.includes(type) ? 'bg-[#95EF90] border-[#95EF90] text-black' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/30'}`}>
-              <span className="text-xs font-bold uppercase tracking-widest">{type}</span>
-              <input 
-                type="checkbox" 
-                name="projectType" 
-                value={type} 
-                checked={formData.projectType.includes(type)} 
-                onChange={handleCheckboxChange} 
-                className="hidden" 
-              />
-              {formData.projectType.includes(type) && <div className="w-2 h-2 bg-black rounded-full"></div>}
-            </label>
-          ))}
+      {submitError && (
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {submitError}
         </div>
-      </div>
+      )}
 
-      <div>
-        <label className={labelClasses}>Project Description</label>
-        <textarea 
-          required 
-          name="description" 
-          value={formData.description} 
-          onChange={handleChange} 
-          rows={6} 
-          className={`${inputClasses} resize-none`} 
-          placeholder="Describe your vision, goals and any specific requirements..."
-        ></textarea>
-      </div>
-
-      <div className="flex justify-center pt-8">
-        <Button 
-          type="submit" 
-          variant="aura" 
-          size="lg" 
+      <div className="pt-2">
+        <Button
+          type="submit"
+          variant="aura"
+          size="md"
           disabled={isSubmitting}
-          className="w-full md:w-auto min-w-[300px] uppercase tracking-[0.3em] font-black text-sm py-6"
+          className="text-[11px] uppercase tracking-[0.18em] font-semibold px-8"
         >
-          {isSubmitting ? 'TRANSMITTING...' : 'START THE JOURNEY'}
+          {isSubmitting ? 'Submitting...' : 'Start the Journey'}
         </Button>
       </div>
     </motion.form>
