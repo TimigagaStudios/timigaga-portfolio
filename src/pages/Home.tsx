@@ -34,7 +34,7 @@ const Home = () => {
         />
 
         <SectionWrapper>
-          {/* Desktop top pills only */}
+          {/* Desktop Top Buttons */}
           <motion.div
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ const Home = () => {
               </div>
             </motion.div>
 
-            {/* Middle Hero */}
+            {/* Center Hero */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -105,7 +105,7 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Mobile buttons below avatar */}
+              {/* Mobile Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -144,8 +144,8 @@ const Home = () => {
                 </p>
 
                 <div className="relative">
-                  <div className="absolute inset-0 blur-3xl bg-[radial-gradient(circle,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.08)_35%,transparent_70%)] opacity-90" />
-                  <h1 className="relative text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] leading-none tracking-[-0.06em] font-semibold bg-[linear-gradient(180deg,#ffffff_0%,#f4f4f4_22%,#d8d8d8_48%,#ffffff_72%,#a7a7a7_100%)] bg-clip-text text-transparent">
+                  <div className="hero-name-glow" />
+                  <h1 className="hero-name relative text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] leading-none tracking-[-0.08em] font-semibold">
                     Timigaga
                   </h1>
                 </div>
@@ -174,7 +174,7 @@ const Home = () => {
             </motion.div>
           </div>
 
-          {/* Tools row */}
+          {/* Tools Row */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -201,9 +201,9 @@ const Home = () => {
                 and modern creative systems for ambitious businesses.
               </h2>
               <p className="mt-6 max-w-3xl text-white/55 text-base md:text-lg leading-8">
-                Timigaga Studios combines strategy, design, development, and AI-assisted
-                execution to help brands launch faster, look sharper, and compete
-                at a higher level.
+                Timigaga Studios combines strategy, design, development, and
+                AI-assisted execution to help brands launch faster, look
+                sharper, and compete at a higher level.
               </p>
             </div>
           </div>
