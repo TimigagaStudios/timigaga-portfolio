@@ -9,23 +9,36 @@ interface ServiceCardProps {
   className?: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ title, description, icon, className = '' }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({
+  title,
+  description,
+  icon,
+  className = '',
+}) => {
   return (
-    <motion.div 
-      className={`glass-dark p-10 rounded-3xl border border-white/5 hover:border-[#95EF90]/30 transition-all duration-500 group ${className}`}
-      whileHover={{ y: -10 }}
-      initial={{ opacity: 0, y: 30 }}
+    <motion.div
+      className={`group rounded-[2rem] glass-dark border border-white/6 p-7 md:p-8 transition-all duration-500 hover:border-[#95EF90]/25 shadow-[0_18px_50px_rgba(0,0,0,0.22)] ${className}`}
+      whileHover={{ y: -6 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      transition={{ duration: 0.45 }}
     >
-      <div className="mb-8 p-5 rounded-2xl bg-white/5 text-[#95EF90] inline-block group-hover:bg-[#95EF90] group-hover:text-black transition-all duration-500">
+      <div className="mb-7 inline-flex rounded-2xl bg-white/5 p-4 text-[#95EF90] transition-all duration-500 group-hover:bg-[#95EF90] group-hover:text-black">
         {icon}
       </div>
-      <h3 className="text-2xl font-bold mb-4 text-white tracking-tight">{title}</h3>
-      <p className="text-gray-400 mb-8 leading-relaxed text-sm font-normal">{description}</p>
-      <div className="flex items-center text-[#95EF90] font-semibold text-xs tracking-widest uppercase group-hover:gap-3 transition-all duration-300 cursor-pointer">
+
+      <h3 className="text-2xl md:text-[1.7rem] font-semibold tracking-[-0.04em] text-white mb-4 leading-tight">
+        {title}
+      </h3>
+
+      <p className="text-white/60 mb-8 leading-8 text-sm md:text-[15px]">
+        {description}
+      </p>
+
+      <div className="inline-flex items-center gap-2 text-[#95EF90] text-[11px] uppercase tracking-[0.18em] font-medium transition-all duration-300 cursor-pointer group-hover:gap-3">
         <span>Discover Service</span>
-        <ArrowRight size={14} className="ml-1 transition-transform group-hover:translate-x-2" />
+        <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1.5" />
       </div>
     </motion.div>
   );
