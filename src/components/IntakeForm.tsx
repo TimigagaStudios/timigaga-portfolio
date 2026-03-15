@@ -54,23 +54,24 @@ const IntakeForm = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-  name: formData.name,
-  email: formData.email,
-  phone: formData.phone,
-  company: formData.company,
-  project_category: formData.project_category,
-  budget: formData.budget,
-  style_preference: formData.style_preference,
-  theme: formData.theme,
-  reference_images: [],
-  message: `
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          project_category: formData.project_category,
+          budget: formData.budget,
+          style_preference: formData.style_preference,
+          theme: formData.theme,
+          reference_images: [],
+          message: `
 Location / Country: ${formData.country || 'N/A'}
 Timeline: ${formData.timeline || 'N/A'}
 
 Project Brief:
 ${formData.message}
-  `.trim(),
-}),
+          `.trim(),
+        }),
+      });
 
       const result = await response.json();
 
