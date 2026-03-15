@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from './Button';
+import { supabase } from '@/lib/supabase';
 
 type IntakeFormData = {
   name: string;
@@ -31,6 +32,8 @@ const IntakeForm = () => {
     theme: '',
   });
 
+  const [referenceFiles, setReferenceFiles] = useState<File[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -42,12 +45,56 @@ const IntakeForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setReferenceFiles(files);
+  };
+
+  const uploadReferenceImages = async () => {
+    if (referenceFiles.length === 0) return [];
+
+    setIsUploadingImages(true);
+
+    try {
+      const uploadedUrls: string[] = [];
+
+      for (const file of referenceFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+        const filePath = `uploads/${fileName}`;
+
+        const { error } = await supabase.storage
+          .from('client-references')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false,
+          });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        const { data } = supabase.storage.from('client-references').getPublicUrl(filePath);
+
+        if (data?.publicUrl) {
+          uploadedUrls.push(data.publicUrl);
+        }
+      }
+
+      return uploadedUrls;
+    } finally {
+      setIsUploadingImages(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError('');
 
     try {
+      const uploadedImageUrls = await uploadReferenceImages();
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -62,7 +109,7 @@ const IntakeForm = () => {
           budget: formData.budget,
           style_preference: formData.style_preference,
           theme: formData.theme,
-          reference_images: [],
+          reference_images: uploadedImageUrls,
           message: `
 Location / Country: ${formData.country || 'N/A'}
 Timeline: ${formData.timeline || 'N/A'}
@@ -93,6 +140,7 @@ ${formData.message}
         style_preference: '',
         theme: '',
       });
+      setReferenceFiles([]);
     } catch (error) {
       console.error(error);
       setSubmitError('Something went wrong while submitting your request. Please try again.');
@@ -287,6 +335,26 @@ ${formData.message}
         </div>
 
         <div className="md:col-span-2">
+          <label className={labelClasses}>Reference Images (Optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white/70 file:mr-4 file:rounded-full file:border-0 file:bg-[#95EF90] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:opacity-90"
+          />
+          {referenceFiles.length > 0 && (
+            <div className="mt-4 space-y-2">
+              {referenceFiles.map((file, index) => (
+                <p key={`${file.name}-${index}`} className="text-sm text-white/55">
+                  {file.name}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="md:col-span-2">
           <label className={labelClasses}>Project Description</label>
           <textarea
             required
@@ -311,10 +379,14 @@ ${formData.message}
           type="submit"
           variant="aura"
           size="md"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isUploadingImages}
           className="text-[11px] uppercase tracking-[0.18em] font-semibold px-8"
         >
-          {isSubmitting ? 'Submitting...' : 'Start the Journey'}
+          {isUploadingImages
+            ? 'Uploading images...'
+            : isSubmitting
+            ? 'Submitting...'
+            : 'Start the Journey'}
         </Button>
       </div>
     </motion.form>
