@@ -19,8 +19,9 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 40);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -30,122 +31,175 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <nav 
+    <nav
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-        scrolled ? 'bg-black/90 backdrop-blur-2xl py-3 border-b border-white/5' : 'bg-transparent py-6'
+        scrolled
+          ? 'bg-black/80 backdrop-blur-2xl py-3 border-b border-white/8'
+          : 'bg-transparent py-5 md:py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-4 group">
-          <div className="w-10 h-10 bg-white rounded-[20%] flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            <span className="text-black font-bold text-xl leading-none">T</span>
+        {/* Brand */}
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 bg-white rounded-[18%] flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.18)] shrink-0">
+            <span className="text-black font-bold text-lg leading-none">T</span>
           </div>
+
           <div className="flex flex-col leading-none">
-            <span className="text-xl font-bold tracking-tight text-white uppercase font-heading group-hover:text-[#95EF90] transition-colors">
-              TIMIGAGA
+            <span className="text-[1rem] md:text-[1.05rem] font-semibold tracking-[-0.04em] text-white font-heading transition-colors duration-300 group-hover:text-[#95EF90]">
+              Timigaga
             </span>
-            <span className="text-[10px] font-semibold tracking-[0.4em] text-[#95EF90] uppercase font-heading mt-0.5">
-              STUDIOS
+            <span className="text-[9px] md:text-[10px] font-medium tracking-[0.34em] text-white/45 uppercase mt-1">
+              Studios
             </span>
           </div>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-12">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              to={link.path} 
-              className={`text-[11px] uppercase font-bold tracking-[0.2em] transition-all hover:text-[#95EF90] font-heading ${
-                location.pathname === link.path ? 'text-[#95EF90]' : 'text-gray-400'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <Button href="/intake" variant="aura" size="sm" className="px-8 text-[10px] uppercase tracking-[0.2em] font-bold font-heading">
-            START PROJECT
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
+          <div className="flex items-center gap-6 lg:gap-8">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`text-[12px] uppercase tracking-[0.18em] font-medium transition-colors duration-300 ${
+                    isActive ? 'text-white' : 'text-white/55 hover:text-[#95EF90]'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </div>
+
+          <Button
+            href="/intake"
+            variant="aura"
+            size="sm"
+            className="px-6 text-[11px] uppercase tracking-[0.18em] font-semibold"
+          >
+            Start Project
           </Button>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button 
-            onClick={() => setIsOpen(!isOpen)} 
-            className="text-white hover:text-[#95EF90] focus:outline-none relative z-[110] p-2 transition-transform active:scale-90"
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-white hover:text-[#95EF90] focus:outline-none relative z-[110] p-2 transition-transform active:scale-95"
             aria-label="Toggle Menu"
           >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
+            {isOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.18 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-md z-[101] md:hidden"
+              className="fixed inset-0 bg-black/92 backdrop-blur-md z-[101] md:hidden"
             />
-            <motion.div 
+
+            <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.25, ease: "easeOut" }}
-              className="fixed top-0 right-0 bottom-0 w-full z-[102] bg-black flex flex-col p-8 md:hidden overflow-y-auto"
+              transition={{ type: 'tween', duration: 0.28, ease: 'easeOut' }}
+              className="fixed top-0 right-0 bottom-0 w-full z-[102] bg-[#050505] flex flex-col p-6 sm:p-8 md:hidden overflow-y-auto"
             >
-              <div className="flex justify-between items-center mb-12 pt-2">
+              <div className="flex items-center justify-between pt-2 mb-12">
                 <Link to="/" className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-white rounded-[20%] flex items-center justify-center">
-                    <span className="text-black font-bold text-lg leading-none">T</span>
+                  <div className="w-9 h-9 bg-white rounded-[18%] flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.18)]">
+                    <span className="text-black font-bold text-base leading-none">T</span>
                   </div>
+
                   <div className="flex flex-col leading-none">
-                    <span className="text-lg font-bold tracking-tight text-white uppercase font-heading">
-                      TIMIGAGA
+                    <span className="text-[1rem] font-semibold tracking-[-0.04em] text-white font-heading">
+                      Timigaga
                     </span>
-                    <span className="text-[8px] font-semibold tracking-[0.4em] text-[#95EF90] uppercase font-heading mt-0.5">
-                      STUDIOS
+                    <span className="text-[9px] tracking-[0.32em] uppercase text-white/45 mt-1">
+                      Studios
                     </span>
                   </div>
                 </Link>
+
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-white/80 hover:text-[#95EF90] transition-colors"
+                  aria-label="Close Menu"
+                >
+                  <X size={26} />
+                </button>
               </div>
 
-              <div className="flex flex-col gap-6 mb-12">
-                {navLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    to={link.path} 
-                    className={`text-2xl uppercase font-bold tracking-tight font-heading transition-colors ${
-                      location.pathname === link.path ? 'text-[#95EF90]' : 'text-white hover:text-[#95EF90]'
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+              <div className="flex flex-col gap-5 mb-12">
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.path;
+
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      className={`text-[1.75rem] leading-none tracking-[-0.04em] font-semibold transition-colors ${
+                        isActive ? 'text-[#95EF90]' : 'text-white hover:text-[#95EF90]'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
               </div>
 
-              <div className="flex flex-col gap-4 mb-12 border-t border-white/5 pt-8">
-                <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-gray-500">Expertise</span>
-                <div className="flex flex-col gap-2 text-sm font-semibold text-gray-400">
-                  <span className="hover:text-white transition-colors cursor-pointer">Development</span>
-                  <span className="hover:text-white transition-colors cursor-pointer">Branding</span>
-                  <span className="hover:text-white transition-colors cursor-pointer">AI Strategy</span>
+              <div className="border-t border-white/8 pt-8 mb-10">
+                <p className="text-[10px] uppercase tracking-[0.32em] text-white/35 mb-4">
+                  Expertise
+                </p>
+
+                <div className="flex flex-col gap-2 text-sm text-white/65">
+                  <span>Web Design & Development</span>
+                  <span>Brand Identity</span>
+                  <span>AI Workflow Systems</span>
                 </div>
               </div>
 
               <div className="mt-auto space-y-8">
                 <div>
-                  <span className="text-[10px] uppercase font-black tracking-[0.3em] text-gray-500 block mb-4">Say Hello</span>
-                  <a href="mailto:hello@timigaga.com" className="text-lg font-bold block hover:text-[#95EF90] transition-colors">hello@timigaga.com</a>
-                  <a href="tel:+1234567890" className="text-sm text-gray-500 mt-2 block hover:text-white transition-colors">+1 (234) 567-890</a>
+                  <p className="text-[10px] uppercase tracking-[0.32em] text-white/35 mb-4">
+                    Contact
+                  </p>
+
+                  <a
+                    href="mailto:Timigaga.official@gmail.com"
+                    className="text-base font-medium block hover:text-[#95EF90] transition-colors"
+                  >
+                    Timigaga.official@gmail.com
+                  </a>
+
+                  <a
+                    href="tel:+2349069584853"
+                    className="text-sm text-white/55 mt-2 block hover:text-white transition-colors"
+                  >
+                    +234 906 958 4853
+                  </a>
                 </div>
-                <Button href="/intake" variant="aura" size="lg" className="w-full uppercase tracking-[0.2em] font-black text-sm">
-                  START A PROJECT
+
+                <Button
+                  href="/intake"
+                  variant="aura"
+                  size="md"
+                  className="w-full uppercase tracking-[0.18em] font-semibold text-[11px]"
+                >
+                  Start a Project
                 </Button>
               </div>
             </motion.div>
