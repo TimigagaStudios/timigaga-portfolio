@@ -9,9 +9,9 @@ const Home = () => {
   return (
     <div className="bg-black text-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-black overflow-hidden pt-28 pb-16">
+      <section className="relative min-h-screen bg-black overflow-hidden pt-24 md:pt-28 pb-16">
         <div className="absolute inset-0 dots-pattern opacity-[0.04]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(149,239,144,0.08),transparent_35%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_25%)]" />
 
         <motion.div
           animate={{
@@ -20,7 +20,7 @@ const Home = () => {
             scale: [1, 1.08, 1],
           }}
           transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-10 left-[-120px] w-[420px] h-[420px] bg-[#95EF90]/6 rounded-full blur-[120px]"
+          className="absolute top-10 left-[-120px] w-[420px] h-[420px] bg-white/5 rounded-full blur-[120px]"
         />
 
         <motion.div
@@ -30,22 +30,22 @@ const Home = () => {
             scale: [1, 1.15, 1],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute bottom-0 right-[-140px] w-[500px] h-[500px] bg-[#95EF90]/5 rounded-full blur-[140px]"
+          className="absolute bottom-0 right-[-140px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[140px]"
         />
 
         <SectionWrapper>
-          {/* Top CTA Pills */}
+          {/* Desktop top pills only */}
           <motion.div
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-wrap items-center justify-center gap-4 mb-14"
+            className="hidden md:flex flex-wrap items-center justify-center gap-4 mb-14"
           >
             <Button
               href="/portfolio"
               variant="aura"
               size="sm"
-              className="text-xs md:text-sm"
+              className="text-sm px-5 py-3"
             >
               See my work
             </Button>
@@ -53,7 +53,7 @@ const Home = () => {
               href="/services"
               variant="aura"
               size="sm"
-              className="text-xs md:text-sm"
+              className="text-sm px-5 py-3"
             >
               My catalog
             </Button>
@@ -61,7 +61,7 @@ const Home = () => {
               href="/contact"
               variant="aura"
               size="sm"
-              className="text-xs md:text-sm"
+              className="text-sm px-5 py-3"
             >
               Book a service
             </Button>
@@ -75,7 +75,7 @@ const Home = () => {
               transition={{ duration: 0.7, delay: 0.1 }}
               className="lg:col-span-3 order-2 lg:order-1"
             >
-              <div className="border-t border-[#95EF90]/30 pt-5 max-w-xs">
+              <div className="border-t border-white/20 pt-5 max-w-xs mx-auto lg:mx-0 text-center lg:text-left">
                 <p className="text-xl md:text-2xl leading-tight text-white/90 font-light tracking-tight">
                   Web Developer,
                   <br />
@@ -93,24 +93,63 @@ const Home = () => {
               className="lg:col-span-6 order-1 lg:order-2 flex flex-col items-center text-center relative"
             >
               <div className="relative w-full flex justify-center">
-                <div className="absolute inset-0 bg-[#95EF90]/8 blur-[100px] rounded-full scale-110" />
+                <div className="absolute inset-0 bg-white/6 blur-[100px] rounded-full scale-110" />
 
-                <div className="relative z-10 w-[260px] sm:w-[300px] md:w-[360px] aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-b from-[#151515] to-[#080808] shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
+                <div className="relative z-10 w-[260px] sm:w-[320px] md:w-[380px] lg:w-[440px]">
+                  <div className="absolute inset-0 bg-white/10 blur-[90px] rounded-full scale-90" />
                   <img
-                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1974&auto=format&fit=crop"
-                    alt="Timigaga Studios creative portrait"
-                    className="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700"
+                    src="/images/timigaga-avatar.png"
+                    alt="Timigaga Studios avatar"
+                    className="relative z-10 w-full h-auto object-contain drop-shadow-[0_30px_80px_rgba(0,0,0,0.55)]"
                   />
                 </div>
               </div>
 
-              <div className="mt-6">
-                <p className="text-[#95EF90] uppercase tracking-[0.6em] text-xs md:text-sm mb-3">
+              {/* Mobile buttons below avatar */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="flex md:hidden flex-wrap items-center justify-center gap-3 mt-8 mb-8 max-w-xs"
+              >
+                <Button
+                  href="/portfolio"
+                  variant="aura"
+                  size="sm"
+                  className="text-[11px] px-4 py-2.5 min-w-[130px]"
+                >
+                  See my work
+                </Button>
+                <Button
+                  href="/services"
+                  variant="aura"
+                  size="sm"
+                  className="text-[11px] px-4 py-2.5 min-w-[130px]"
+                >
+                  My catalog
+                </Button>
+                <Button
+                  href="/contact"
+                  variant="aura"
+                  size="sm"
+                  className="text-[11px] px-4 py-2.5 min-w-[130px]"
+                >
+                  Book a service
+                </Button>
+              </motion.div>
+
+              <div className="mt-2 md:mt-6">
+                <p className="text-white/55 uppercase tracking-[0.55em] text-[11px] md:text-sm mb-3">
                   Timothy Buoro
                 </p>
-                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] font-semibold tracking-tighter leading-none">
-                  Timigaga
-                </h1>
+
+                <div className="relative">
+                  <div className="absolute inset-0 blur-3xl bg-[radial-gradient(circle,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.08)_35%,transparent_70%)] opacity-90" />
+                  <h1 className="relative text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] leading-none tracking-[-0.06em] font-semibold bg-[linear-gradient(180deg,#ffffff_0%,#f4f4f4_22%,#d8d8d8_48%,#ffffff_72%,#a7a7a7_100%)] bg-clip-text text-transparent">
+                    Timigaga
+                  </h1>
+                </div>
+
                 <p className="text-base md:text-lg text-white/60 mt-4 max-w-xl mx-auto leading-8">
                   Build. Design. Innovate.
                 </p>
@@ -124,7 +163,7 @@ const Home = () => {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="lg:col-span-3 order-3"
             >
-              <div className="max-w-sm ml-auto">
+              <div className="max-w-sm mx-auto lg:ml-auto text-center lg:text-left">
                 <p className="text-base md:text-lg text-white/80 leading-8">
                   Hi, I’m Timothy — founder of Timigaga Studios. I design and
                   build modern digital experiences for brands that want premium
@@ -135,7 +174,7 @@ const Home = () => {
             </motion.div>
           </div>
 
-          {/* Brand / Tools row */}
+          {/* Tools row */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -156,7 +195,7 @@ const Home = () => {
       <section className="py-16 md:py-24 bg-black">
         <SectionWrapper>
           <div className="max-w-5xl">
-            <div className="border-t border-[#95EF90]/25 pt-8">
+            <div className="border-t border-white/15 pt-8">
               <h2 className="text-3xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-medium text-white">
                 Crafting premium websites, digital products, visual branding,
                 and modern creative systems for ambitious businesses.
@@ -175,7 +214,7 @@ const Home = () => {
       <section className="py-16 md:py-20 bg-black">
         <SectionWrapper>
           <div className="mb-12">
-            <p className="text-[#95EF90] uppercase tracking-[0.4em] text-xs mb-4">
+            <p className="text-white/45 uppercase tracking-[0.4em] text-xs mb-4">
               What I do
             </p>
             <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
@@ -208,7 +247,7 @@ const Home = () => {
         <SectionWrapper>
           <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-12">
             <div>
-              <p className="text-[#95EF90] uppercase tracking-[0.4em] text-xs mb-4">
+              <p className="text-white/45 uppercase tracking-[0.4em] text-xs mb-4">
                 Portfolio
               </p>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
@@ -245,7 +284,7 @@ const Home = () => {
 
       {/* Final CTA */}
       <section className="py-24 bg-black relative overflow-hidden border-t border-white/5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] bg-[#95EF90]/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] bg-white/5 rounded-full blur-[120px]" />
 
         <SectionWrapper>
           <div className="relative z-10 text-center max-w-4xl mx-auto">
