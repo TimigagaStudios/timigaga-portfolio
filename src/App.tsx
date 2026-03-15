@@ -9,7 +9,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Intake from './pages/Intake';
 
-export function App() {
+function App() {
   return (
     <Router>
       <ScrollToTop />
@@ -27,3 +27,5 @@ export function App() {
     </Router>
   );
 }
+
+export default App;
