@@ -9,38 +9,97 @@ const blogPosts = [
     title: 'How Premium Websites Win Better Clients',
     category: 'Web Design',
     date: 'March 2026',
-    readTime: '6 min read',
+    readTime: '8 min read',
     image:
       'https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?q=80&w=2000&auto=format&fit=crop',
     intro:
       'A premium website does far more than look polished. It influences trust, frames perception, and helps businesses attract stronger opportunities with greater consistency.',
-    content: [
-      'In today’s digital market, your website often becomes the first real interaction people have with your brand. Before any meeting, call, or proposal, people are already forming an opinion based on how your brand presents itself online.',
-      'That means design is not just decoration. Structure, spacing, typography, loading experience, clarity of messaging, and interaction quality all contribute to how serious your business feels. Premium clients are often more sensitive to quality cues than people realize.',
-      'A strong website communicates confidence. It tells the visitor that your business understands positioning, understands presentation, and understands what it means to build trust before asking for commitment.',
-      'This is why premium websites tend to convert better clients. They create alignment between the value you claim and the experience the visitor actually feels. When there is no gap between those two, trust increases.',
-      'For creative studios, consultants, agencies, and digital businesses, the website should not feel like a brochure. It should feel like a system. It should lead, qualify, reassure, and persuade with intention.',
-      'At Timigaga Studios, that is the standard we aim for: websites that do not simply exist online, but actively strengthen the quality of the opportunities a business attracts.'
-    ],
+    sections: [
+      {
+        heading: 'First impressions are rarely neutral',
+        paragraphs: [
+          'In most cases, your website becomes the first real conversation your brand has with a potential client. Long before a call is booked, before an email is sent, and before pricing is discussed, visitors are already deciding whether your business feels trustworthy, capable, and worth engaging.',
+          'That decision often happens quickly. People notice the clarity of your structure, the quality of the visuals, the confidence in your copy, and the polish of the experience. Even if they cannot explain it technically, they can feel whether a website looks intentional or improvised.'
+        ]
+      },
+      {
+        heading: 'Premium is not only visual',
+        paragraphs: [
+          'A premium website is not simply one with nice colors or smooth animations. Premium quality is usually the result of many small choices working together: thoughtful spacing, refined typography, better hierarchy, consistent imagery, clear positioning, and an experience that feels stable and deliberate.',
+          'When those details are aligned, the visitor starts to feel reassured. The website communicates that the business behind it pays attention, values quality, and is prepared to deliver at a higher standard.'
+        ]
+      },
+      {
+        heading: 'The right clients respond to the right signals',
+        paragraphs: [
+          'Higher-value clients often evaluate more than your service list. They look for signs of maturity, consistency, confidence, and relevance. A weak digital presence can silently reduce trust before the conversation even begins.',
+          'On the other hand, when a website feels premium, it creates alignment between your positioning and your presentation. That alignment increases the quality of opportunities you attract.'
+        ]
+      },
+      {
+        heading: 'Trust is built through clarity',
+        paragraphs: [
+          'One of the most underrated traits of a premium website is clarity. Good websites guide people. They make it easy to understand who you are, what you do, who you help, and what the next step should be.',
+          'Confusion creates friction. Clarity creates confidence. And confidence improves conversion.'
+        ]
+      },
+      {
+        heading: 'A website should operate like a business asset',
+        paragraphs: [
+          'Too many websites exist only as placeholders. They look acceptable but do not actively support the business. A stronger website should qualify leads, support your authority, and reinforce your value before the first meeting happens.',
+          'That is the difference between simply being online and actually using your online presence strategically.'
+        ]
+      },
+      {
+        heading: 'Why this matters for Timigaga Studios clients',
+        paragraphs: [
+          'At Timigaga Studios, the goal is not just to produce websites that look modern. The goal is to build digital experiences that elevate perception, support business growth, and position brands more credibly in competitive markets.',
+          'That is why premium web design remains one of the most practical investments a modern business can make.'
+        ]
+      }
+    ]
   },
   {
     slug: 'why-brand-identity-still-matters-in-the-ai-era',
     title: 'Why Brand Identity Still Matters in the AI Era',
     category: 'Branding',
     date: 'March 2026',
-    readTime: '5 min read',
+    readTime: '7 min read',
     image:
       'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2000&auto=format&fit=crop',
     intro:
-      'As AI makes production faster and more accessible, brand identity becomes even more important as a differentiator.',
-    content: [
-      'AI has made content creation, ideation, and execution dramatically faster. But when speed becomes widely available, distinction becomes more valuable.',
-      'This is where brand identity matters. A good identity helps people recognize your business, understand your positioning, and remember your presence after they leave.',
-      'Without a strong identity, many brands begin to feel interchangeable. In an era where outputs can be generated quickly, clarity and recognizability become strategic advantages.',
-      'Brand identity is not only a logo or color set. It includes tone, structure, visual rhythm, perception, and consistency across the entire brand experience.',
-      'Businesses that understand this will continue to stand out, even in increasingly automated markets.'
-    ],
-  },
+      'As AI lowers the barrier to execution, strong brand identity becomes even more valuable as a differentiator.',
+    sections: [
+      {
+        heading: 'Speed is no longer enough',
+        paragraphs: [
+          'AI has made ideation and execution dramatically faster. But once speed becomes widely available, the real differentiator is no longer speed itself. It becomes distinction.',
+          'That means businesses need a stronger identity, not a weaker one.'
+        ]
+      },
+      {
+        heading: 'Identity creates memorability',
+        paragraphs: [
+          'Brand identity gives shape to how people remember you. It influences recognition, trust, and perception across every touchpoint.',
+          'Without identity, many brands begin to feel interchangeable.'
+        ]
+      },
+      {
+        heading: 'Consistency is strategic',
+        paragraphs: [
+          'Consistency across your website, visuals, tone, and communication builds trust over time. In a noisy market, consistency is one of the clearest signals of seriousness.',
+          'This is especially important when AI makes generic production easier.'
+        ]
+      },
+      {
+        heading: 'The future belongs to brands with taste',
+        paragraphs: [
+          'Tools can generate output, but taste still decides what is worth keeping. The businesses that combine AI efficiency with strong identity and curation will remain the most compelling.',
+          'That is where branding still matters deeply.'
+        ]
+      }
+    ]
+  }
 ];
 
 const BlogPost = () => {
@@ -116,7 +175,7 @@ const BlogPost = () => {
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="overflow-hidden rounded-[2rem] border border-white/6 glass-dark mb-12"
+            className="overflow-hidden rounded-[2rem] border border-white/6 glass-dark mb-14"
           >
             <div className="relative aspect-[16/9] overflow-hidden">
               <img
@@ -134,14 +193,23 @@ const BlogPost = () => {
             transition={{ duration: 0.55, delay: 0.14 }}
             className="max-w-3xl"
           >
-            <div className="space-y-8">
-              {post.content.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className="text-white/72 text-base md:text-lg leading-9"
-                >
-                  {paragraph}
-                </p>
+            <div className="space-y-12">
+              {post.sections.map((section, index) => (
+                <section key={index}>
+                  <h2 className="text-2xl md:text-4xl font-semibold tracking-tight mb-5">
+                    {section.heading}
+                  </h2>
+                  <div className="space-y-7">
+                    {section.paragraphs.map((paragraph, paragraphIndex) => (
+                      <p
+                        key={paragraphIndex}
+                        className="text-white/72 text-base md:text-lg leading-9"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </section>
               ))}
             </div>
           </motion.article>
