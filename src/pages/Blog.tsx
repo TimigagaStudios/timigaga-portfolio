@@ -11,6 +11,7 @@ const posts = [
     title: 'How Premium Websites Win Better Clients',
     category: 'Web Design',
     date: 'March 2026',
+    readTime: '8 min read',
     excerpt:
       'A strong website is more than design. It shapes trust, communicates positioning, and attracts higher-value clients from the first impression.',
     image:
@@ -23,6 +24,7 @@ const posts = [
     title: 'Why Brand Identity Still Matters in the AI Era',
     category: 'Branding',
     date: 'March 2026',
+    readTime: '7 min read',
     excerpt:
       'As AI makes execution faster, brand identity becomes even more important. Distinction, clarity, and trust remain your strongest competitive assets.',
     image:
@@ -35,6 +37,7 @@ const posts = [
     title: 'Using AI Tools to Build Faster Without Losing Quality',
     category: 'AI',
     date: 'March 2026',
+    readTime: '6 min read',
     excerpt:
       'AI can accelerate development, content, and strategy workflows, but the real advantage comes from combining speed with taste, structure, and quality control.',
     image:
@@ -47,6 +50,7 @@ const posts = [
     title: 'The Modern Client Journey for Creative Studios',
     category: 'Business',
     date: 'March 2026',
+    readTime: '9 min read',
     excerpt:
       'From discovery to conversion, today’s client journey is shaped by credibility, speed, clarity, and confidence across every interaction.',
     image:
@@ -59,6 +63,7 @@ const posts = [
     title: 'What Makes a Portfolio Feel Premium',
     category: 'Design',
     date: 'March 2026',
+    readTime: '7 min read',
     excerpt:
       'Premium portfolios are built on restraint, rhythm, typography, spacing, and visual confidence. The details always shape the perception.',
     image:
@@ -71,6 +76,7 @@ const posts = [
     title: 'Systems, Not Chaos: Building a Better Studio Workflow',
     category: 'Productivity',
     date: 'March 2026',
+    readTime: '8 min read',
     excerpt:
       'Studios scale better when they move from scattered tools to structured systems for intake, delivery, communication, and follow-up.',
     image:
@@ -108,9 +114,7 @@ const Blog = () => {
             transition={{ duration: 0.5 }}
             className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.95] mb-6"
           >
-            Thoughts, strategy, design,
-            <br />
-            systems, and studio insight.
+            Long-form insight for modern brands, creative systems, and digital growth.
           </motion.h1>
 
           <motion.p
@@ -119,9 +123,9 @@ const Blog = () => {
             transition={{ duration: 0.5, delay: 0.08 }}
             className="text-white/60 text-base md:text-lg leading-8 max-w-3xl"
           >
-            A premium editorial space for ideas around web design, branding,
-            AI-assisted workflows, digital growth, and the systems behind
-            building modern creative businesses.
+            Timigaga Journal is where strategy, design, systems, AI, and business thinking
+            come together. It is built for founders, modern brands, and anyone interested
+            in building a more premium digital presence.
           </motion.p>
         </div>
 
@@ -155,6 +159,10 @@ const Blog = () => {
                     <span className="text-white/30">•</span>
                     <span className="text-[11px] uppercase tracking-[0.24em] text-white/40">
                       {featuredPost.date}
+                    </span>
+                    <span className="text-white/30">•</span>
+                    <span className="text-[11px] uppercase tracking-[0.24em] text-white/40">
+                      {featuredPost.readTime}
                     </span>
                   </div>
 
@@ -227,6 +235,10 @@ const Blog = () => {
                     <span className="text-[10px] uppercase tracking-[0.22em] text-white/35">
                       {post.date}
                     </span>
+                    <span className="text-white/25">•</span>
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-white/35">
+                      {post.readTime}
+                    </span>
                   </div>
 
                   <h3 className="text-2xl font-semibold tracking-tight leading-tight mb-4 group-hover:text-[#95EF90] transition-colors">
@@ -252,14 +264,14 @@ const Blog = () => {
 
         <div className="mt-20 md:mt-24 rounded-[2rem] border border-white/6 glass-dark p-8 md:p-12 text-center">
           <p className="text-white/40 uppercase tracking-[0.35em] text-xs mb-4">
-            Stay in the loop
+            Editorial Direction
           </p>
           <h3 className="text-3xl md:text-5xl font-semibold tracking-tight mb-5">
-            More insights coming soon.
+            Built to grow into a real premium journal.
           </h3>
           <p className="text-white/60 max-w-2xl mx-auto text-base leading-8">
-            Timigaga Journal will continue to share ideas on design, systems,
-            creative business, and digital growth for modern brands.
+            This blog is structured to support long-form thought leadership,
+            SEO-rich articles, strategic brand positioning, and future editorial expansion.
           </p>
         </div>
       </SectionWrapper>
