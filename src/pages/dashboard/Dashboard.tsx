@@ -10,8 +10,12 @@ type ClientRequest = {
   email: string;
   phone?: string;
   company?: string;
+  country?: string;
   project_category: string;
   budget?: string;
+  budget_amount?: number | null;
+  budget_currency?: string | null;
+  budget_display?: string | null;
   style_preference?: string;
   theme?: string;
   message: string;
@@ -147,7 +151,8 @@ const DashboardPage = () => {
                       <div>
                         <h3 className="text-white font-medium text-lg">{item.name}</h3>
                         <p className="text-white/50 text-sm mt-1">
-                          {item.project_category} • {item.budget || 'No budget set'}
+                          {item.project_category} •{' '}
+                          {item.budget_display || item.budget || 'No budget set'}
                         </p>
                         {item.company && (
                           <p className="text-white/35 text-sm mt-1">{item.company}</p>
