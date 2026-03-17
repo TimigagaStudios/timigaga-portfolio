@@ -186,6 +186,9 @@ ${formData.message}
   const inputClasses =
     'w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3.5 text-white outline-none transition-all placeholder:text-white/25 focus:border-[#95EF90] focus:ring-1 focus:ring-[#95EF90] text-sm md:text-base';
 
+  const selectClasses =
+    'w-full rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3.5 text-white outline-none transition-all focus:border-[#95EF90] focus:ring-1 focus:ring-[#95EF90] text-sm md:text-base appearance-none';
+
   const labelClasses =
     'block text-[11px] uppercase tracking-[0.22em] text-white/40 mb-3';
 
@@ -267,17 +270,35 @@ ${formData.message}
             name="project_category"
             value={formData.project_category}
             onChange={handleChange}
-            className={inputClasses}
+            className={selectClasses}
           >
-            <option value="">Select category</option>
-            <option value="Web Design">Web Design</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Brand Identity">Brand Identity</option>
-            <option value="UI/UX Design">UI/UX Design</option>
-            <option value="AI Workflow System">AI Workflow System</option>
-            <option value="Photography">Photography</option>
-            <option value="Cinematography">Cinematography</option>
-            <option value="Social Media Management">Social Media Management</option>
+            <option value="" className="bg-[#0A0A0A] text-white">
+              Select category
+            </option>
+            <option value="Web Design" className="bg-[#0A0A0A] text-white">
+              Web Design
+            </option>
+            <option value="Web Development" className="bg-[#0A0A0A] text-white">
+              Web Development
+            </option>
+            <option value="Brand Identity" className="bg-[#0A0A0A] text-white">
+              Brand Identity
+            </option>
+            <option value="UI/UX Design" className="bg-[#0A0A0A] text-white">
+              UI/UX Design
+            </option>
+            <option value="AI Workflow System" className="bg-[#0A0A0A] text-white">
+              AI Workflow System
+            </option>
+            <option value="Photography" className="bg-[#0A0A0A] text-white">
+              Photography
+            </option>
+            <option value="Cinematography" className="bg-[#0A0A0A] text-white">
+              Cinematography
+            </option>
+            <option value="Social Media Management" className="bg-[#0A0A0A] text-white">
+              Social Media Management
+            </option>
           </select>
         </div>
 
@@ -299,13 +320,23 @@ ${formData.message}
             name="timeline"
             value={formData.timeline}
             onChange={handleChange}
-            className={inputClasses}
+            className={selectClasses}
           >
-            <option value="">Select timeline</option>
-            <option value="Urgent (under 2 weeks)">Urgent (under 2 weeks)</option>
-            <option value="About 1 month">About 1 month</option>
-            <option value="2 to 3 months">2 to 3 months</option>
-            <option value="Flexible">Flexible</option>
+            <option value="" className="bg-[#0A0A0A] text-white">
+              Select timeline
+            </option>
+            <option value="Urgent (under 2 weeks)" className="bg-[#0A0A0A] text-white">
+              Urgent (under 2 weeks)
+            </option>
+            <option value="About 1 month" className="bg-[#0A0A0A] text-white">
+              About 1 month
+            </option>
+            <option value="2 to 3 months" className="bg-[#0A0A0A] text-white">
+              2 to 3 months
+            </option>
+            <option value="Flexible" className="bg-[#0A0A0A] text-white">
+              Flexible
+            </option>
           </select>
         </div>
 
@@ -327,12 +358,20 @@ ${formData.message}
             name="theme"
             value={formData.theme}
             onChange={handleChange}
-            className={inputClasses}
+            className={selectClasses}
           >
-            <option value="">Select theme preference</option>
-            <option value="Dark">Dark</option>
-            <option value="Light">Light</option>
-            <option value="Not sure yet">Not sure yet</option>
+            <option value="" className="bg-[#0A0A0A] text-white">
+              Select theme preference
+            </option>
+            <option value="Dark" className="bg-[#0A0A0A] text-white">
+              Dark
+            </option>
+            <option value="Light" className="bg-[#0A0A0A] text-white">
+              Light
+            </option>
+            <option value="Not sure yet" className="bg-[#0A0A0A] text-white">
+              Not sure yet
+            </option>
           </select>
         </div>
 
