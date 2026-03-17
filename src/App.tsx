@@ -13,6 +13,7 @@ import BlogPost from './pages/BlogPost';
 import DashboardPage from './pages/dashboard/Dashboard';
 import RequestsPage from './pages/dashboard/Requests';
 import RevenuePage from './pages/dashboard/Revenue';
+import ProjectsPage from './pages/dashboard/Projects';
 
 export function App() {
   return (
@@ -32,6 +33,7 @@ export function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/dashboard/requests" element={<RequestsPage />} />
           <Route path="/dashboard/revenue" element={<RevenuePage />} />
+          <Route path="/dashboard/projects" element={<ProjectsPage />} />
         </Routes>
       </Layout>
     </Router>
