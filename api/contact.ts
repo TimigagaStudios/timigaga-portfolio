@@ -6,6 +6,7 @@ type ClientRequestPayload = {
   email: string;
   phone?: string;
   company?: string;
+  country?: string;
   project_category: string;
   budget?: string;
   style_preference?: string;
@@ -38,6 +39,70 @@ function validatePayload(body: Partial<ClientRequestPayload>) {
   if (!body.project_category || !body.project_category.trim()) return 'Project category is required';
   if (!body.message || !body.message.trim()) return 'Message is required';
   return null;
+}
+
+function inferCurrencyFromCountry(country?: string) {
+  if (!country) return 'USD';
+
+  const normalized = country.toLowerCase();
+
+  if (normalized.includes('nigeria')) return 'NGN';
+  if (normalized.includes('ghana')) return 'GHS';
+  if (normalized.includes('kenya')) return 'KES';
+  if (normalized.includes('south africa')) return 'ZAR';
+  if (normalized.includes('united kingdom') || normalized.includes('uk')) return 'GBP';
+  if (normalized.includes('canada')) return 'CAD';
+  if (normalized.includes('europe') || normalized.includes('germany') || normalized.includes('france')) return 'EUR';
+  if (normalized.includes('united states') || normalized.includes('usa')) return 'USD';
+
+  return 'USD';
+}
+
+function formatCurrency(amount: number, currency: string) {
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `${currency} ${amount}`;
+  }
+}
+
+function normalizeBudget(rawBudget?: string, country?: string) {
+  if (!rawBudget || !rawBudget.trim()) {
+    return {
+      budget_amount: null,
+      budget_currency: null,
+      budget_display: rawBudget || null,
+    };
+  }
+
+  const value = rawBudget.trim();
+
+  let detectedCurrency: string | null = null;
+
+  if (value.includes('₦')) detectedCurrency = 'NGN';
+  else if (value.includes('$')) detectedCurrency = 'USD';
+  else if (value.includes('£')) detectedCurrency = 'GBP';
+  else if (value.includes('€')) detectedCurrency = 'EUR';
+
+  if (!detectedCurrency) {
+    detectedCurrency = inferCurrencyFromCountry(country);
+  }
+
+  const numericMatch = value.replace(/,/g, '').match(/\d+(\.\d+)?/);
+  const amount = numericMatch ? Number(numericMatch[0]) : null;
+
+  return {
+    budget_amount: amount,
+    budget_currency: detectedCurrency,
+    budget_display:
+      amount !== null && detectedCurrency
+        ? formatCurrency(amount, detectedCurrency)
+        : value,
+  };
 }
 
 async function sendBrevoEmail({
@@ -99,13 +164,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const payload: ClientRequestPayload = {
+    const normalizedBudget = normalizeBudget(body.budget, body.country);
+
+    const payload = {
       name: body.name.trim(),
       email: body.email.trim(),
       phone: body.phone?.trim() || '',
       company: body.company?.trim() || '',
+      country: body.country?.trim() || '',
       project_category: body.project_category.trim(),
       budget: body.budget?.trim() || '',
+      budget_amount: normalizedBudget.budget_amount,
+      budget_currency: normalizedBudget.budget_currency,
+      budget_display: normalizedBudget.budget_display,
       style_preference: body.style_preference?.trim() || '',
       theme: body.theme?.trim() || '',
       message: body.message.trim(),
@@ -135,8 +206,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <p><strong>Email:</strong> ${payload.email}</p>
         <p><strong>Phone:</strong> ${payload.phone || 'N/A'}</p>
         <p><strong>Company:</strong> ${payload.company || 'N/A'}</p>
+        <p><strong>Country:</strong> ${payload.country || 'N/A'}</p>
         <p><strong>Project Category:</strong> ${payload.project_category}</p>
-        <p><strong>Budget:</strong> ${payload.budget || 'N/A'}</p>
+        <p><strong>Budget:</strong> ${payload.budget_display || payload.budget || 'N/A'}</p>
         <p><strong>Style Preference:</strong> ${payload.style_preference || 'N/A'}</p>
         <p><strong>Theme:</strong> ${payload.theme || 'N/A'}</p>
         <p><strong>Reference Images:</strong> ${
@@ -154,7 +226,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <p>Hi ${payload.name},</p>
         <p>We’ve received your request and will review it shortly.</p>
         <p><strong>Project Category:</strong> ${payload.project_category}</p>
-        <p><strong>Budget:</strong> ${payload.budget || 'N/A'}</p>
+        <p><strong>Budget:</strong> ${payload.budget_display || payload.budget || 'N/A'}</p>
         <p><strong>Style Preference:</strong> ${payload.style_preference || 'N/A'}</p>
         <p style="margin-top: 20px;">Timigaga Studios</p>
         <p>Build. Design. Innovate.</p>
