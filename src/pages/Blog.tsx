@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SectionWrapper from '@/components/SectionWrapper';
 
 const posts = [
   {
     id: '1',
+    slug: 'how-premium-websites-win-better-clients',
     title: 'How Premium Websites Win Better Clients',
     category: 'Web Design',
     date: 'March 2026',
@@ -17,6 +19,7 @@ const posts = [
   },
   {
     id: '2',
+    slug: 'why-brand-identity-still-matters-in-the-ai-era',
     title: 'Why Brand Identity Still Matters in the AI Era',
     category: 'Branding',
     date: 'March 2026',
@@ -28,6 +31,7 @@ const posts = [
   },
   {
     id: '3',
+    slug: 'using-ai-tools-to-build-faster-without-losing-quality',
     title: 'Using AI Tools to Build Faster Without Losing Quality',
     category: 'AI',
     date: 'March 2026',
@@ -39,6 +43,7 @@ const posts = [
   },
   {
     id: '4',
+    slug: 'the-modern-client-journey-for-creative-studios',
     title: 'The Modern Client Journey for Creative Studios',
     category: 'Business',
     date: 'March 2026',
@@ -50,6 +55,7 @@ const posts = [
   },
   {
     id: '5',
+    slug: 'what-makes-a-portfolio-feel-premium',
     title: 'What Makes a Portfolio Feel Premium',
     category: 'Design',
     date: 'March 2026',
@@ -61,6 +67,7 @@ const posts = [
   },
   {
     id: '6',
+    slug: 'systems-not-chaos-building-a-better-studio-workflow',
     title: 'Systems, Not Chaos: Building a Better Studio Workflow',
     category: 'Productivity',
     date: 'March 2026',
@@ -90,7 +97,6 @@ const Blog = () => {
   return (
     <div className="bg-black text-white pt-28 md:pt-32 pb-20 overflow-hidden">
       <SectionWrapper>
-        {/* Hero */}
         <div className="max-w-4xl mb-14 md:mb-16">
           <p className="text-white/40 uppercase tracking-[0.4em] text-xs mb-5">
             Journal
@@ -119,7 +125,6 @@ const Blog = () => {
           </motion.p>
         </div>
 
-        {/* Featured Post */}
         {featuredPost && (
           <motion.article
             initial={{ opacity: 0, y: 24 }}
@@ -163,17 +168,19 @@ const Blog = () => {
                 </div>
 
                 <div className="mt-10">
-                  <button className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-white hover:text-[#95EF90] transition-colors">
+                  <Link
+                    to={`/blog/${featuredPost.slug}`}
+                    className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-white hover:text-[#95EF90] transition-colors"
+                  >
                     Read article
                     <ArrowUpRight size={16} />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
           </motion.article>
         )}
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-10 md:mb-12">
           {categories.map((category) => (
             <button
@@ -190,7 +197,6 @@ const Blog = () => {
           ))}
         </div>
 
-        {/* Grid */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
           <AnimatePresence mode="popLayout">
             {filteredPosts.map((post) => (
@@ -231,17 +237,19 @@ const Blog = () => {
                     {post.excerpt}
                   </p>
 
-                  <button className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-[#95EF90] transition-colors">
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-[#95EF90] transition-colors"
+                  >
                     Read article
                     <ArrowUpRight size={15} />
-                  </button>
+                  </Link>
                 </div>
               </motion.article>
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* CTA */}
         <div className="mt-20 md:mt-24 rounded-[2rem] border border-white/6 glass-dark p-8 md:p-12 text-center">
           <p className="text-white/40 uppercase tracking-[0.35em] text-xs mb-4">
             Stay in the loop
