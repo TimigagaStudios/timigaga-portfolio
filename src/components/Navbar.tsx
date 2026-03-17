@@ -13,6 +13,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Portfolio', path: '/portfolio' },
     { name: 'Services', path: '/services' },
+    { name: 'Blog', path: '/blog' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -45,13 +46,13 @@ const Navbar = () => {
             <img
               src="/images/timigaga-logo-full.png"
               alt="Timigaga Studios"
-              className="h-20 md:h-24 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+              className="h-14 md:h-16 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
             />
           </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 lg:gap-10">
-            <div className="flex items-center gap-6 lg:gap-8">
+            <div className="flex items-center gap-5 lg:gap-7">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
 
@@ -117,7 +118,7 @@ const Navbar = () => {
                   <img
                     src="/images/timigaga-logo-full.png"
                     alt="Timigaga Studios"
-                    className="h-20 w-auto object-contain"
+                    className="h-14 w-auto object-contain"
                   />
                 </Link>
 
