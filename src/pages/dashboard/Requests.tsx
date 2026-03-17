@@ -10,8 +10,12 @@ type ClientRequest = {
   email: string;
   phone?: string;
   company?: string;
+  country?: string;
   project_category: string;
   budget?: string;
+  budget_amount?: number | null;
+  budget_currency?: string | null;
+  budget_display?: string | null;
   style_preference?: string;
   theme?: string;
   message: string;
@@ -175,7 +179,8 @@ const RequestsPage = () => {
                     <p className="text-white font-medium text-lg">{request.name}</p>
                     <p className="text-white/45 text-sm mt-1">{request.email}</p>
                     <p className="text-white/35 text-sm mt-1">
-                      {request.project_category} • {request.budget || 'No budget set'}
+                      {request.project_category} •{' '}
+                      {request.budget_display || request.budget || 'No budget set'}
                     </p>
                   </div>
 
@@ -233,6 +238,13 @@ const RequestsPage = () => {
 
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                    Country
+                  </p>
+                  <p className="text-white/75">{selectedRequest.country || '—'}</p>
+                </div>
+
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
                     Category
                   </p>
                   <p className="text-white/75">{selectedRequest.project_category}</p>
@@ -242,7 +254,25 @@ const RequestsPage = () => {
                   <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
                     Budget
                   </p>
-                  <p className="text-white/75">{selectedRequest.budget || '—'}</p>
+                  <p className="text-white/75">
+                    {selectedRequest.budget_display || selectedRequest.budget || '—'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                    Currency
+                  </p>
+                  <p className="text-white/75">{selectedRequest.budget_currency || '—'}</p>
+                </div>
+
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                    Budget Amount
+                  </p>
+                  <p className="text-white/75">
+                    {selectedRequest.budget_amount ?? '—'}
+                  </p>
                 </div>
 
                 <div>
