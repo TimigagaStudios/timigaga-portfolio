@@ -10,6 +10,8 @@ import Contact from './pages/Contact';
 import Intake from './pages/Intake';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import DashboardPage from './pages/dashboard/Dashboard';
+import RequestsPage from './pages/dashboard/Requests';
 
 export function App() {
   return (
@@ -26,6 +28,8 @@ export function App() {
           <Route path="/intake" element={<Intake />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/requests" element={<RequestsPage />} />
         </Routes>
       </Layout>
     </Router>
