@@ -2,7 +2,30 @@ import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+
+async function verifyAuth(req: VercelRequest) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { authorized: false, error: 'Missing authorization token' };
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+
+  const supabaseAuthClient = createClient(supabaseUrl, supabaseAnonKey);
+  const {
+    data: { user },
+    error,
+  } = await supabaseAuthClient.auth.getUser(token);
+
+  if (error || !user) {
+    return { authorized: false, error: 'Unauthorized' };
+  }
+
+  return { authorized: true, user };
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -13,12 +36,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    if (!supabaseUrl) {
-      throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL');
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
+      throw new Error('Missing Supabase environment variables');
     }
 
-    if (!supabaseServiceRoleKey) {
-      throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+    const authCheck = await verifyAuth(req);
+
+    if (!authCheck.authorized) {
+      return res.status(401).json({
+        success: false,
+        error: authCheck.error,
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
