@@ -14,6 +14,7 @@ import DashboardPage from './pages/dashboard/Dashboard';
 import RequestsPage from './pages/dashboard/Requests';
 import RevenuePage from './pages/dashboard/Revenue';
 import ProjectsPage from './pages/dashboard/Projects';
+import AnalyticsPage from './pages/dashboard/Analytics';
 
 export function App() {
   return (
@@ -34,6 +35,7 @@ export function App() {
           <Route path="/dashboard/requests" element={<RequestsPage />} />
           <Route path="/dashboard/revenue" element={<RevenuePage />} />
           <Route path="/dashboard/projects" element={<ProjectsPage />} />
+          <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
         </Routes>
       </Layout>
     </Router>
