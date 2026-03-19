@@ -3,6 +3,9 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import StatusBadge from '@/components/dashboard/StatusBadge';
 import Button from '@/components/Button';
+import SectionCard from '@/components/dashboard/SectionCard';
+import FilterBar from '@/components/dashboard/FilterBar';
+import EmptyState from '@/components/dashboard/EmptyState';
 import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
@@ -45,10 +48,7 @@ const RequestsPage = () => {
 
       const headers = await getAuthHeaders();
 
-      const response = await fetch('/api/requests', {
-        headers,
-      });
-
+      const response = await fetch('/api/requests', { headers });
       const result = await response.json();
 
       if (!response.ok) {
@@ -84,7 +84,7 @@ const RequestsPage = () => {
     });
   }, [requests, search, statusFilter]);
 
-  const openRequestDetails = async (request: ClientRequest) => {
+  const openRequestDetails = (request: ClientRequest) => {
     setSelectedRequest(request);
     setStatusValue(request.status);
   };
@@ -103,9 +103,7 @@ const RequestsPage = () => {
           'Content-Type': 'application/json',
           ...headers,
         },
-        body: JSON.stringify({
-          status: statusValue,
-        }),
+        body: JSON.stringify({ status: statusValue }),
       });
 
       const result = await response.json();
@@ -173,35 +171,20 @@ const RequestsPage = () => {
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-[1.25fr_0.75fr] gap-6">
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
-              Intake Requests
-            </h2>
-
-            <div className="flex flex-wrap gap-3">
-              <input
-                type="text"
-                placeholder="Search requests..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-[#95EF90]"
-              />
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
-              >
-                <option className="bg-[#0A0A0A] text-white">All Statuses</option>
-                <option className="bg-[#0A0A0A] text-white">pending</option>
-                <option className="bg-[#0A0A0A] text-white">reviewed</option>
-                <option className="bg-[#0A0A0A] text-white">contacted</option>
-                <option className="bg-[#0A0A0A] text-white">closed</option>
-              </select>
-            </div>
-          </div>
-
+        <SectionCard
+          title="Intake Requests"
+          subtitle="Search, filter, and review inbound project requests from your live intake system."
+          rightSlot={
+            <FilterBar
+              searchValue={search}
+              onSearchChange={setSearch}
+              searchPlaceholder="Search requests..."
+              filterValue={statusFilter}
+              onFilterChange={setStatusFilter}
+              filterOptions={['All Statuses', ...statusOptions]}
+            />
+          }
+        >
           {loading ? (
             <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
               Loading requests...
@@ -211,9 +194,10 @@ const RequestsPage = () => {
               {error}
             </div>
           ) : filteredRequests.length === 0 ? (
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
-              No requests found.
-            </div>
+            <EmptyState
+              title="No requests found"
+              description="Try adjusting your search or status filter. New intake submissions will appear here automatically."
+            />
           ) : (
             <div className="space-y-4">
               {filteredRequests.map((request) => (
@@ -246,177 +230,129 @@ const RequestsPage = () => {
               ))}
             </div>
           )}
-        </div>
+        </SectionCard>
 
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
+        <SectionCard
+          title="Request Details"
+          subtitle="Inspect a request, review uploads, update its status, or convert it into a project."
+        >
           {!selectedRequest ? (
-            <div className="text-white/45">
-              <h3 className="text-xl font-semibold text-white mb-4">
-                Request Details
-              </h3>
-              <p className="leading-8">
-                Select a request to view full details, uploaded references, update status, or convert into a project.
-              </p>
-            </div>
+            <EmptyState
+              title="Nothing selected yet"
+              description="Choose a request from the list to view its full details and take action."
+            />
           ) : (
-            <div>
-              <div className="mb-6">
+            <div className="space-y-5">
+              <div>
                 <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
                   {selectedRequest.name}
                 </h3>
                 <p className="text-white/50 text-sm">{selectedRequest.email}</p>
               </div>
 
-              <div className="space-y-5">
-                <div>
+              {[
+                ['Company', selectedRequest.company || '—'],
+                ['Phone', selectedRequest.phone || '—'],
+                ['Country', selectedRequest.country || '—'],
+                ['Category', selectedRequest.project_category],
+                [
+                  'Budget',
+                  selectedRequest.budget_display || selectedRequest.budget || '—',
+                ],
+                ['Currency', selectedRequest.budget_currency || '—'],
+                ['Budget Amount', selectedRequest.budget_amount ?? '—'],
+                ['Style Preference', selectedRequest.style_preference || '—'],
+                ['Theme', selectedRequest.theme || '—'],
+              ].map(([label, value]) => (
+                <div key={label}>
                   <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Company
+                    {label}
                   </p>
-                  <p className="text-white/75">{selectedRequest.company || '—'}</p>
+                  <p className="text-white/75">{value}</p>
                 </div>
+              ))}
 
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Phone
-                  </p>
-                  <p className="text-white/75">{selectedRequest.phone || '—'}</p>
-                </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  Message
+                </p>
+                <p className="text-white/70 leading-8 whitespace-pre-wrap">
+                  {selectedRequest.message}
+                </p>
+              </div>
 
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Country
-                  </p>
-                  <p className="text-white/75">{selectedRequest.country || '—'}</p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Category
-                  </p>
-                  <p className="text-white/75">{selectedRequest.project_category}</p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Budget
-                  </p>
-                  <p className="text-white/75">
-                    {selectedRequest.budget_display || selectedRequest.budget || '—'}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Currency
-                  </p>
-                  <p className="text-white/75">{selectedRequest.budget_currency || '—'}</p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Budget Amount
-                  </p>
-                  <p className="text-white/75">
-                    {selectedRequest.budget_amount ?? '—'}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Style Preference
-                  </p>
-                  <p className="text-white/75">{selectedRequest.style_preference || '—'}</p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Theme
-                  </p>
-                  <p className="text-white/75">{selectedRequest.theme || '—'}</p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Message
-                  </p>
-                  <p className="text-white/70 leading-8 whitespace-pre-wrap">
-                    {selectedRequest.message}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    Reference Images
-                  </p>
-                  {selectedRequest.reference_images &&
-                  selectedRequest.reference_images.length > 0 ? (
-                    <div className="space-y-2">
-                      {selectedRequest.reference_images.map((url, index) => (
-                        <a
-                          key={`${url}-${index}`}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-sm text-[#95EF90] hover:text-white transition-colors break-all"
-                        >
-                          View reference image {index + 1}
-                        </a>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-white/45">No reference images</p>
-                  )}
-                </div>
-
-                <div className="pt-4 border-t border-white/8">
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                    Update Status
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                    <select
-                      value={statusValue}
-                      onChange={(e) => setStatusValue(e.target.value)}
-                      className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
-                    >
-                      {statusOptions.map((status) => (
-                        <option
-                          key={status}
-                          value={status}
-                          className="bg-[#0A0A0A] text-white"
-                        >
-                          {status}
-                        </option>
-                      ))}
-                    </select>
-
-                    <Button
-                      type="button"
-                      variant="aura"
-                      size="sm"
-                      onClick={handleStatusUpdate}
-                      disabled={updatingStatus}
-                      className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                    >
-                      {updatingStatus ? 'Saving...' : 'Save Status'}
-                    </Button>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  Reference Images
+                </p>
+                {selectedRequest.reference_images &&
+                selectedRequest.reference_images.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedRequest.reference_images.map((url, index) => (
+                      <a
+                        key={`${url}-${index}`}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-sm text-[#95EF90] hover:text-white transition-colors break-all"
+                      >
+                        View reference image {index + 1}
+                      </a>
+                    ))}
                   </div>
+                ) : (
+                  <p className="text-white/45">No reference images</p>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-white/8">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+                  Update Status
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                  <select
+                    value={statusValue}
+                    onChange={(e) => setStatusValue(e.target.value)}
+                    className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
+                  >
+                    {statusOptions.map((status) => (
+                      <option
+                        key={status}
+                        value={status}
+                        className="bg-[#0A0A0A] text-white"
+                      >
+                        {status}
+                      </option>
+                    ))}
+                  </select>
 
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="aura"
                     size="sm"
-                    onClick={handleConvertToProject}
-                    disabled={convertingProject}
+                    onClick={handleStatusUpdate}
+                    disabled={updatingStatus}
                     className="text-[11px] uppercase tracking-[0.16em] font-medium"
                   >
-                    {convertingProject ? 'Converting...' : 'Convert to Project'}
+                    {updatingStatus ? 'Saving...' : 'Save Status'}
                   </Button>
                 </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleConvertToProject}
+                  disabled={convertingProject}
+                  className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                >
+                  {convertingProject ? 'Converting...' : 'Convert to Project'}
+                </Button>
               </div>
             </div>
           )}
-        </div>
+        </SectionCard>
       </div>
     </DashboardShell>
   );
