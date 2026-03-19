@@ -6,6 +6,7 @@ import SectionCard from '@/components/dashboard/SectionCard';
 import FilterBar from '@/components/dashboard/FilterBar';
 import EmptyState from '@/components/dashboard/EmptyState';
 import { getAuthHeaders } from '@/lib/auth';
+import { useToast } from '@/components/ui/useToast';
 
 type ProjectItem = {
   id: string;
@@ -45,6 +46,8 @@ const stageStyles: Record<ProjectItem['stage'], string> = {
 };
 
 const ProjectsPage = () => {
+  const { showToast } = useToast();
+
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -146,9 +149,19 @@ const ProjectsPage = () => {
       );
 
       setSelectedProject(updatedProject);
+
+      showToast({
+        type: 'success',
+        title: 'Project updated',
+        message: `Project stage changed to ${updatedProject.stage}.`,
+      });
     } catch (err) {
       console.error(err);
-      alert('Failed to update project stage.');
+      showToast({
+        type: 'error',
+        title: 'Update failed',
+        message: 'Could not update the project stage.',
+      });
     } finally {
       setUpdatingStage(false);
     }
