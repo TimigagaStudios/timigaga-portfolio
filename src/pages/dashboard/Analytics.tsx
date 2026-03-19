@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import MetricCard from '@/components/dashboard/MetricCard';
+import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -34,7 +35,12 @@ const AnalyticsPage = () => {
         setLoading(true);
         setError('');
 
-        const response = await fetch('/api/requests');
+        const headers = await getAuthHeaders();
+
+        const response = await fetch('/api/requests', {
+          headers,
+        });
+
         const result = await response.json();
 
         if (!response.ok) {
@@ -136,7 +142,6 @@ const AnalyticsPage = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {/* Status Distribution */}
             <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
               <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
                 Status Distribution
@@ -155,7 +160,6 @@ const AnalyticsPage = () => {
               </div>
             </div>
 
-            {/* Service Demand */}
             <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
               <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
                 Service Demand
@@ -178,7 +182,6 @@ const AnalyticsPage = () => {
               )}
             </div>
 
-            {/* Theme Preferences */}
             <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
               <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
                 Theme Preference
