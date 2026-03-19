@@ -7,6 +7,7 @@ import SectionCard from '@/components/dashboard/SectionCard';
 import FilterBar from '@/components/dashboard/FilterBar';
 import EmptyState from '@/components/dashboard/EmptyState';
 import { getAuthHeaders } from '@/lib/auth';
+import { useToast } from '@/components/ui/useToast';
 
 type ClientRequest = {
   id: string;
@@ -31,6 +32,8 @@ type ClientRequest = {
 const statusOptions = ['pending', 'reviewed', 'contacted', 'closed'];
 
 const RequestsPage = () => {
+  const { showToast } = useToast();
+
   const [requests, setRequests] = useState<ClientRequest[]>([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Statuses');
@@ -119,9 +122,19 @@ const RequestsPage = () => {
       );
 
       setSelectedRequest(updatedRequest);
+
+      showToast({
+        type: 'success',
+        title: 'Status updated',
+        message: `Request status changed to ${updatedRequest.status}.`,
+      });
     } catch (err) {
       console.error(err);
-      alert('Failed to update request status.');
+      showToast({
+        type: 'error',
+        title: 'Update failed',
+        message: 'Could not update request status.',
+      });
     } finally {
       setUpdatingStatus(false);
     }
@@ -154,10 +167,19 @@ const RequestsPage = () => {
 
       await fetchRequests();
       setSelectedRequest(null);
-      alert('Request converted to project successfully.');
+
+      showToast({
+        type: 'success',
+        title: 'Project created',
+        message: 'The request was successfully converted into a project.',
+      });
     } catch (err) {
       console.error(err);
-      alert('Failed to convert request into project.');
+      showToast({
+        type: 'error',
+        title: 'Conversion failed',
+        message: 'Could not convert this request into a project.',
+      });
     } finally {
       setConvertingProject(false);
     }
