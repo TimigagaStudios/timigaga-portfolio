@@ -35,6 +35,7 @@ const RequestsPage = () => {
   const [error, setError] = useState('');
   const [selectedRequest, setSelectedRequest] = useState<ClientRequest | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [convertingProject, setConvertingProject] = useState(false);
   const [statusValue, setStatusValue] = useState('');
 
   const fetchRequests = async () => {
@@ -128,6 +129,42 @@ const RequestsPage = () => {
     }
   };
 
+  const handleConvertToProject = async () => {
+    if (!selectedRequest) return;
+
+    try {
+      setConvertingProject(true);
+
+      const headers = await getAuthHeaders();
+
+      const response = await fetch('/api/projects/convert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: JSON.stringify({
+          requestId: selectedRequest.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Failed to convert request');
+      }
+
+      await fetchRequests();
+      setSelectedRequest(null);
+      alert('Request converted to project successfully.');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to convert request into project.');
+    } finally {
+      setConvertingProject(false);
+    }
+  };
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -218,7 +255,7 @@ const RequestsPage = () => {
                 Request Details
               </h3>
               <p className="leading-8">
-                Select a request to view full details, uploaded references, and update its status.
+                Select a request to view full details, uploaded references, update status, or convert into a project.
               </p>
             </div>
           ) : (
@@ -336,7 +373,7 @@ const RequestsPage = () => {
                     Update Status
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3 mb-4">
                     <select
                       value={statusValue}
                       onChange={(e) => setStatusValue(e.target.value)}
@@ -364,6 +401,17 @@ const RequestsPage = () => {
                       {updatingStatus ? 'Saving...' : 'Save Status'}
                     </Button>
                   </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleConvertToProject}
+                    disabled={convertingProject}
+                    className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                  >
+                    {convertingProject ? 'Converting...' : 'Convert to Project'}
+                  </Button>
                 </div>
               </div>
             </div>
