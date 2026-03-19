@@ -1,0 +1,74 @@
+import { createClient } from '@supabase/supabase-js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+
+async function verifyAuth(req: VercelRequest) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { authorized: false, error: 'Missing authorization token' };
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+
+  const supabaseAuthClient = createClient(supabaseUrl, supabaseAnonKey);
+  const {
+    data: { user },
+    error,
+  } = await supabaseAuthClient.auth.getUser(token);
+
+  if (error || !user) {
+    return { authorized: false, error: 'Unauthorized' };
+  }
+
+  return { authorized: true, user };
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed',
+    });
+  }
+
+  try {
+    const authCheck = await verifyAuth(req);
+
+    if (!authCheck.authorized) {
+      return res.status(401).json({
+        success: false,
+        error: authCheck.error,
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error('Projects API error:', error);
+
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Internal server error',
+    });
+  }
+}
