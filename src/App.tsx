@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import CaseStudy from './pages/CaseStudy';
@@ -12,11 +13,13 @@ import Intake from './pages/Intake';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import AdminLogin from './pages/AdminLogin';
+
 import DashboardPage from './pages/dashboard/Dashboard';
 import RequestsPage from './pages/dashboard/Requests';
 import RevenuePage from './pages/dashboard/Revenue';
 import ProjectsPage from './pages/dashboard/Projects';
 import AnalyticsPage from './pages/dashboard/Analytics';
+import SettingsPage from './pages/dashboard/Settings';
 
 export function App() {
   return (
@@ -72,6 +75,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <AnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
               </ProtectedRoute>
             }
           />
