@@ -5,6 +5,7 @@ import Button from '@/components/Button';
 import SectionCard from '@/components/dashboard/SectionCard';
 import FilterBar from '@/components/dashboard/FilterBar';
 import EmptyState from '@/components/dashboard/EmptyState';
+import NotesPanel from '@/components/dashboard/NotesPanel';
 import { getAuthHeaders } from '@/lib/auth';
 import { useToast } from '@/components/ui/useToast';
 
@@ -317,6 +318,8 @@ const ProjectsPage = () => {
                   {selectedProject.message || '—'}
                 </p>
               </div>
+
+              <NotesPanel projectId={selectedProject.id} />
 
               <div className="pt-4 border-t border-white/8">
                 <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
