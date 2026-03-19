@@ -3,6 +3,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import StatusBadge from '@/components/dashboard/StatusBadge';
 import Button from '@/components/Button';
+import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -41,7 +42,12 @@ const RequestsPage = () => {
       setLoading(true);
       setError('');
 
-      const response = await fetch('/api/requests');
+      const headers = await getAuthHeaders();
+
+      const response = await fetch('/api/requests', {
+        headers,
+      });
+
       const result = await response.json();
 
       if (!response.ok) {
@@ -88,10 +94,13 @@ const RequestsPage = () => {
     try {
       setUpdatingStatus(true);
 
+      const headers = await getAuthHeaders();
+
       const response = await fetch(`/api/requests/${selectedRequest.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          ...headers,
         },
         body: JSON.stringify({
           status: statusValue,
