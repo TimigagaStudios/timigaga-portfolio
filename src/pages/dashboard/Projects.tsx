@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
+import Button from '@/components/Button';
 import { getAuthHeaders } from '@/lib/auth';
 
 type ProjectItem = {
@@ -15,9 +16,21 @@ type ProjectItem = {
   budget_amount?: number | null;
   budget_currency?: string | null;
   budget_display?: string | null;
+  style_preference?: string;
+  theme?: string;
+  message?: string;
   stage: 'onboarding' | 'in progress' | 'waiting on client' | 'review' | 'completed' | 'archived';
   created_at: string;
 };
+
+const stageOptions: ProjectItem['stage'][] = [
+  'onboarding',
+  'in progress',
+  'waiting on client',
+  'review',
+  'completed',
+  'archived',
+];
 
 const stageStyles: Record<ProjectItem['stage'], string> = {
   onboarding: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
@@ -32,34 +45,37 @@ const ProjectsPage = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [stageValue, setStageValue] = useState<ProjectItem['stage']>('onboarding');
+  const [updatingStage, setUpdatingStage] = useState(false);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const headers = await getAuthHeaders();
+
+      const response = await fetch('/api/projects', {
+        headers,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Failed to fetch projects');
+      }
+
+      setProjects(result.data || []);
+    } catch (err) {
+      console.error(err);
+      setError('Unable to load projects right now.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        setLoading(true);
-        setError('');
-
-        const headers = await getAuthHeaders();
-
-        const response = await fetch('/api/projects', {
-          headers,
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result?.error || 'Failed to fetch projects');
-        }
-
-        setProjects(result.data || []);
-      } catch (err) {
-        console.error(err);
-        setError('Unable to load projects right now.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProjects();
   }, []);
 
@@ -72,6 +88,51 @@ const ProjectsPage = () => {
     () => projects.filter((project) => project.stage === 'completed').length,
     [projects]
   );
+
+  const openProjectDetails = (project: ProjectItem) => {
+    setSelectedProject(project);
+    setStageValue(project.stage);
+  };
+
+  const handleStageUpdate = async () => {
+    if (!selectedProject) return;
+
+    try {
+      setUpdatingStage(true);
+
+      const headers = await getAuthHeaders();
+
+      const response = await fetch(`/api/projects/${selectedProject.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: JSON.stringify({
+          stage: stageValue,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || 'Failed to update project stage');
+      }
+
+      const updatedProject = result.data as ProjectItem;
+
+      setProjects((prev) =>
+        prev.map((item) => (item.id === updatedProject.id ? updatedProject : item))
+      );
+
+      setSelectedProject(updatedProject);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update project stage.');
+    } finally {
+      setUpdatingStage(false);
+    }
+  };
 
   return (
     <DashboardShell>
@@ -119,98 +180,167 @@ const ProjectsPage = () => {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
-                Project Pipeline
-              </h2>
-
-              <div className="flex flex-wrap gap-3">
-                <input
-                  type="text"
-                  placeholder="Search projects..."
-                  className="rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-[#95EF90]"
-                />
-                <select className="rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]">
-                  <option className="bg-[#0A0A0A] text-white">All Stages</option>
-                  <option className="bg-[#0A0A0A] text-white">onboarding</option>
-                  <option className="bg-[#0A0A0A] text-white">in progress</option>
-                  <option className="bg-[#0A0A0A] text-white">waiting on client</option>
-                  <option className="bg-[#0A0A0A] text-white">review</option>
-                  <option className="bg-[#0A0A0A] text-white">completed</option>
-                  <option className="bg-[#0A0A0A] text-white">archived</option>
-                </select>
+          <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
+            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
+                  Project Pipeline
+                </h2>
+                <span className="text-[11px] uppercase tracking-[0.2em] text-white/35">
+                  Live data
+                </span>
               </div>
+
+              {projects.length === 0 ? (
+                <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
+                  No projects yet. Convert a request into a project from the Requests page.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {projects.map((project) => (
+                    <div
+                      key={project.id}
+                      className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                    >
+                      <div>
+                        <p className="text-white font-medium text-lg">{project.project_name}</p>
+                        <p className="text-white/45 text-sm mt-1">
+                          {project.client_name} • {project.service}
+                        </p>
+                        <p className="text-white/35 text-sm mt-1">
+                          {project.budget_display || project.budget || 'No value set'}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3">
+                        <span
+                          className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
+                            stageStyles[project.stage]
+                          }`}
+                        >
+                          {project.stage}
+                        </span>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                          onClick={() => openProjectDetails(project)}
+                        >
+                          View
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {projects.length === 0 ? (
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
-                No projects yet. Convert a request into a project from the Requests page.
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[980px] border-separate border-spacing-y-3">
-                  <thead>
-                    <tr>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
-                        Project
-                      </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
-                        Client
-                      </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
+              {!selectedProject ? (
+                <div className="text-white/45">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Project Details
+                  </h3>
+                  <p className="leading-8">
+                    Select a project to view its details and update its stage.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
+                      {selectedProject.project_name}
+                    </h3>
+                    <p className="text-white/50 text-sm">{selectedProject.client_name}</p>
+                  </div>
+
+                  <div className="space-y-5">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                        Client Email
+                      </p>
+                      <p className="text-white/75">{selectedProject.client_email || '—'}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                        Company
+                      </p>
+                      <p className="text-white/75">{selectedProject.company || '—'}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
                         Service
-                      </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      </p>
+                      <p className="text-white/75">{selectedProject.service}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
                         Country
-                      </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
-                        Value
-                      </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
-                        Stage
-                      </th>
-                    </tr>
-                  </thead>
+                      </p>
+                      <p className="text-white/75">{selectedProject.country || '—'}</p>
+                    </div>
 
-                  <tbody>
-                    {projects.map((project) => (
-                      <tr key={project.id} className="bg-white/[0.02]">
-                        <td className="px-4 py-4 rounded-l-2xl border-y border-l border-white/6">
-                          <p className="text-white font-medium">{project.project_name}</p>
-                        </td>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                        Budget
+                      </p>
+                      <p className="text-white/75">
+                        {selectedProject.budget_display || selectedProject.budget || '—'}
+                      </p>
+                    </div>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/70">
-                          {project.client_name}
-                        </td>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                        Message
+                      </p>
+                      <p className="text-white/70 leading-8 whitespace-pre-wrap">
+                        {selectedProject.message || '—'}
+                      </p>
+                    </div>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/70">
-                          {project.service}
-                        </td>
+                    <div className="pt-4 border-t border-white/8">
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+                        Update Stage
+                      </p>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/45">
-                          {project.country || '—'}
-                        </td>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <select
+                          value={stageValue}
+                          onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
+                          className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
+                        >
+                          {stageOptions.map((stage) => (
+                            <option
+                              key={stage}
+                              value={stage}
+                              className="bg-[#0A0A0A] text-white"
+                            >
+                              {stage}
+                            </option>
+                          ))}
+                        </select>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/70">
-                          {project.budget_display || project.budget || '—'}
-                        </td>
-
-                        <td className="px-4 py-4 rounded-r-2xl border-y border-r border-white/6">
-                          <span
-                            className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
-                              stageStyles[project.stage]
-                            }`}
-                          >
-                            {project.stage}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                        <Button
+                          type="button"
+                          variant="aura"
+                          size="sm"
+                          onClick={handleStageUpdate}
+                          disabled={updatingStage}
+                          className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                        >
+                          {updatingStage ? 'Saving...' : 'Save Stage'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}
