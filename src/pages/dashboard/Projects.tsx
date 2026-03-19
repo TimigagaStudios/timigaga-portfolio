@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import Button from '@/components/Button';
+import SectionCard from '@/components/dashboard/SectionCard';
+import FilterBar from '@/components/dashboard/FilterBar';
+import EmptyState from '@/components/dashboard/EmptyState';
 import { getAuthHeaders } from '@/lib/auth';
 
 type ProjectItem = {
@@ -48,6 +51,8 @@ const ProjectsPage = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const [stageValue, setStageValue] = useState<ProjectItem['stage']>('onboarding');
   const [updatingStage, setUpdatingStage] = useState(false);
+  const [search, setSearch] = useState('');
+  const [stageFilter, setStageFilter] = useState('All Stages');
 
   const fetchProjects = async () => {
     try {
@@ -78,6 +83,21 @@ const ProjectsPage = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      const matchesSearch =
+        project.project_name.toLowerCase().includes(search.toLowerCase()) ||
+        project.client_name.toLowerCase().includes(search.toLowerCase()) ||
+        project.service.toLowerCase().includes(search.toLowerCase());
+
+      const matchesStage =
+        stageFilter === 'All Stages' ||
+        project.stage.toLowerCase() === stageFilter.toLowerCase();
+
+      return matchesSearch && matchesStage;
+    });
+  }, [projects, search, stageFilter]);
 
   const activeProjects = useMemo(() => projects.length, [projects]);
   const inProgressProjects = useMemo(
@@ -141,209 +161,188 @@ const ProjectsPage = () => {
         subtitle="Monitor active client projects, delivery stages, deadlines, and project value from a clean internal workspace."
       />
 
-      {loading ? (
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6 text-white/55">
-          Loading projects...
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
+        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+            Active Projects
+          </p>
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+            {activeProjects}
+          </h3>
         </div>
-      ) : error ? (
-        <div className="rounded-[1.75rem] border border-red-500/20 bg-red-500/10 p-6 text-red-300">
-          {error}
+
+        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+            In Progress
+          </p>
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+            {inProgressProjects}
+          </h3>
         </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
-            <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
-                Active Projects
-              </p>
-              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
-                {activeProjects}
-              </h3>
-            </div>
 
-            <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
-                In Progress
-              </p>
-              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
-                {inProgressProjects}
-              </h3>
-            </div>
+        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+            Completed
+          </p>
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+            {completedProjects}
+          </h3>
+        </div>
+      </div>
 
-            <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
-                Completed
-              </p>
-              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
-                {completedProjects}
-              </h3>
+      <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
+        <SectionCard
+          title="Project Pipeline"
+          subtitle="Search and filter project records, then open a project to manage its delivery stage."
+          rightSlot={
+            <FilterBar
+              searchValue={search}
+              onSearchChange={setSearch}
+              searchPlaceholder="Search projects..."
+              filterValue={stageFilter}
+              onFilterChange={setStageFilter}
+              filterOptions={['All Stages', ...stageOptions]}
+            />
+          }
+        >
+          {loading ? (
+            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
+              Loading projects...
             </div>
-          </div>
+          ) : error ? (
+            <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-red-300">
+              {error}
+            </div>
+          ) : filteredProjects.length === 0 ? (
+            <EmptyState
+              title="No projects found"
+              description="Projects created from request conversion will appear here. Try adjusting your search or filter."
+            />
+          ) : (
+            <div className="space-y-4">
+              {filteredProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                >
+                  <div>
+                    <p className="text-white font-medium text-lg">{project.project_name}</p>
+                    <p className="text-white/45 text-sm mt-1">
+                      {project.client_name} • {project.service}
+                    </p>
+                    <p className="text-white/35 text-sm mt-1">
+                      {project.budget_display || project.budget || 'No value set'}
+                    </p>
+                  </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
-                  Project Pipeline
-                </h2>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-white/35">
-                  Live data
-                </span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span
+                      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
+                        stageStyles[project.stage]
+                      }`}
+                    >
+                      {project.stage}
+                    </span>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                      onClick={() => openProjectDetails(project)}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+
+        <SectionCard
+          title="Project Details"
+          subtitle="Inspect the selected project and update its current stage."
+        >
+          {!selectedProject ? (
+            <EmptyState
+              title="No project selected"
+              description="Select a project from the pipeline to review its details and update progress."
+            />
+          ) : (
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
+                  {selectedProject.project_name}
+                </h3>
+                <p className="text-white/50 text-sm">{selectedProject.client_name}</p>
               </div>
 
-              {projects.length === 0 ? (
-                <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
-                  No projects yet. Convert a request into a project from the Requests page.
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {projects.map((project) => (
-                    <div
-                      key={project.id}
-                      className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-                    >
-                      <div>
-                        <p className="text-white font-medium text-lg">{project.project_name}</p>
-                        <p className="text-white/45 text-sm mt-1">
-                          {project.client_name} • {project.service}
-                        </p>
-                        <p className="text-white/35 text-sm mt-1">
-                          {project.budget_display || project.budget || 'No value set'}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span
-                          className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
-                            stageStyles[project.stage]
-                          }`}
-                        >
-                          {project.stage}
-                        </span>
-
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                          onClick={() => openProjectDetails(project)}
-                        >
-                          View
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
-              {!selectedProject ? (
-                <div className="text-white/45">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Project Details
-                  </h3>
-                  <p className="leading-8">
-                    Select a project to view its details and update its stage.
+              {[
+                ['Client Email', selectedProject.client_email || '—'],
+                ['Company', selectedProject.company || '—'],
+                ['Service', selectedProject.service],
+                ['Country', selectedProject.country || '—'],
+                [
+                  'Budget',
+                  selectedProject.budget_display || selectedProject.budget || '—',
+                ],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                    {label}
                   </p>
+                  <p className="text-white/75">{value}</p>
                 </div>
-              ) : (
-                <div>
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
-                      {selectedProject.project_name}
-                    </h3>
-                    <p className="text-white/50 text-sm">{selectedProject.client_name}</p>
-                  </div>
+              ))}
 
-                  <div className="space-y-5">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Client Email
-                      </p>
-                      <p className="text-white/75">{selectedProject.client_email || '—'}</p>
-                    </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  Message
+                </p>
+                <p className="text-white/70 leading-8 whitespace-pre-wrap">
+                  {selectedProject.message || '—'}
+                </p>
+              </div>
 
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Company
-                      </p>
-                      <p className="text-white/75">{selectedProject.company || '—'}</p>
-                    </div>
+              <div className="pt-4 border-t border-white/8">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+                  Update Stage
+                </p>
 
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Service
-                      </p>
-                      <p className="text-white/75">{selectedProject.service}</p>
-                    </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <select
+                    value={stageValue}
+                    onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
+                    className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
+                  >
+                    {stageOptions.map((stage) => (
+                      <option
+                        key={stage}
+                        value={stage}
+                        className="bg-[#0A0A0A] text-white"
+                      >
+                        {stage}
+                      </option>
+                    ))}
+                  </select>
 
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Country
-                      </p>
-                      <p className="text-white/75">{selectedProject.country || '—'}</p>
-                    </div>
-
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Budget
-                      </p>
-                      <p className="text-white/75">
-                        {selectedProject.budget_display || selectedProject.budget || '—'}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                        Message
-                      </p>
-                      <p className="text-white/70 leading-8 whitespace-pre-wrap">
-                        {selectedProject.message || '—'}
-                      </p>
-                    </div>
-
-                    <div className="pt-4 border-t border-white/8">
-                      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                        Update Stage
-                      </p>
-
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <select
-                          value={stageValue}
-                          onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
-                          className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
-                        >
-                          {stageOptions.map((stage) => (
-                            <option
-                              key={stage}
-                              value={stage}
-                              className="bg-[#0A0A0A] text-white"
-                            >
-                              {stage}
-                            </option>
-                          ))}
-                        </select>
-
-                        <Button
-                          type="button"
-                          variant="aura"
-                          size="sm"
-                          onClick={handleStageUpdate}
-                          disabled={updatingStage}
-                          className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                        >
-                          {updatingStage ? 'Saving...' : 'Save Stage'}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <Button
+                    type="button"
+                    variant="aura"
+                    size="sm"
+                    onClick={handleStageUpdate}
+                    disabled={updatingStage}
+                    className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                  >
+                    {updatingStage ? 'Saving...' : 'Save Stage'}
+                  </Button>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          )}
+        </SectionCard>
+      </div>
     </DashboardShell>
   );
 };
