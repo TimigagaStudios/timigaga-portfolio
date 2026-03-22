@@ -1,130 +1,97 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import LeadFinder from './pages/LeadFinder';
-import Leads from './pages/Leads';
-import LeadDetail from './pages/LeadDetail';
-import Outreach from './pages/Outreach';
-import Settings from './pages/Settings';
-import Login from './pages/Login';
-import Analytics from './pages/Analytics';
-import { LeadProvider } from './context/LeadContext';
-import { ThemeProvider } from './context/ThemeContext';
+import ScrollToTop from './components/ScrollToTop';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
-const RequireAuth = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-  const location = useLocation();
+import Home from './pages/Home';
+import Portfolio from './pages/Portfolio';
+import CaseStudy from './pages/CaseStudy';
+import Services from './pages/Services';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Intake from './pages/Intake';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import AdminLogin from './pages/AdminLogin';
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+import DashboardPage from './pages/dashboard/Dashboard';
+import RequestsPage from './pages/dashboard/Requests';
+import RevenuePage from './pages/dashboard/Revenue';
+import ProjectsPage from './pages/dashboard/Projects';
+import AnalyticsPage from './pages/dashboard/Analytics';
+import SettingsPage from './pages/dashboard/Settings';
 
-  return children;
-};
-
-const App = () => {
+export function App() {
   return (
-    <ThemeProvider>
-      <LeadProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
+    <Router>
+      <ScrollToTop />
+      <Layout>
+        <Routes>
+          {/* Public site */}
+          <Route path="/" element={<Home />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:id" element={<CaseStudy />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/intake" element={<Intake />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
 
-            <Route
-              path="/"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
+          {/* Admin auth */}
+          <Route path="/admin-login" element={<AdminLogin />} />
 
-            <Route
-              path="/finder"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <LeadFinder />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/leads"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Leads />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/leads/:id"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <LeadDetail />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/outreach"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Outreach />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/analytics"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Analytics />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/deals"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Leads />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route
-              path="/settings"
-              element={
-                <RequireAuth>
-                  <Layout>
-                    <Settings />
-                  </Layout>
-                </RequireAuth>
-              }
-            />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
-      </LeadProvider>
-    </ThemeProvider>
+          {/* Protected dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/requests"
+            element={
+              <ProtectedRoute>
+                <RequestsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/revenue"
+            element={
+              <ProtectedRoute>
+                <RevenuePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/projects"
+            element={
+              <ProtectedRoute>
+                <ProjectsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/analytics"
+            element={
+              <ProtectedRoute>
+                <AnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Layout>
+    </Router>
   );
-};
-
-export default App;
+}
