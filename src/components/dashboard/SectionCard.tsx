@@ -14,17 +14,17 @@ const SectionCard: React.FC<SectionCardProps> = ({
   rightSlot,
 }) => {
   return (
-    <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
+    <div className="rounded-[1.75rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
       {(title || subtitle || rightSlot) && (
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
           <div>
             {title && (
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)]">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-white/45 text-sm md:text-base leading-7 mt-2 max-w-2xl">
+              <p className="text-[var(--app-muted)] text-sm md:text-base leading-7 mt-2 max-w-2xl">
                 {subtitle}
               </p>
             )}
