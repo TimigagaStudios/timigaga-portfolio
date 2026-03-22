@@ -45,13 +45,13 @@ const DashboardPage = () => {
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result?.error || 'Failed to fetch dashboard data');
+          throw new Error(result?.error || `Request failed with status ${response.status}`);
         }
 
         setRequests(result.data || []);
       } catch (err) {
-        console.error(err);
-        setError('Unable to load dashboard data right now.');
+        console.error('Dashboard fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Unknown dashboard error');
       } finally {
         setLoading(false);
       }
@@ -121,7 +121,8 @@ const DashboardPage = () => {
         </div>
       ) : error ? (
         <div className="rounded-[1.75rem] border border-red-500/20 bg-red-500/10 p-6 text-red-300">
-          {error}
+          <p className="font-semibold mb-2">Dashboard failed to load</p>
+          <p className="text-sm break-words">{error}</p>
         </div>
       ) : (
         <>
