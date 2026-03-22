@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { requireAdmin } from './_utils/requireAdmin';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -14,12 +14,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    if (!supabaseUrl || !supabaseServiceRoleKey) {
-      throw new Error('Missing Supabase environment variables');
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
+      return res.status(500).json({
+        success: false,
+        error: 'Missing Supabase environment variables',
+      });
     }
 
-    const user = await requireAdmin(req, res);
-    if (!user) return;
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Missing authorization token',
+      });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+
+    const supabaseAuthClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAuthClient.auth.getUser(token);
+
+    if (authError || !user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+      });
+    }
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
