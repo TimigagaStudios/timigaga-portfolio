@@ -28,8 +28,8 @@ const SettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const applyAdminTheme = (themeValue: string) => {
-    if (themeValue === 'Light') {
+  const syncThemeFromSetting = (themeLabel: string) => {
+    if (themeLabel === 'Light') {
       setTheme('light');
     } else {
       setTheme('dark');
@@ -53,7 +53,7 @@ const SettingsPage = () => {
       }
 
       setSettings(result.data);
-      applyAdminTheme(result.data.default_theme);
+      syncThemeFromSetting(result.data.default_theme);
     } catch (error) {
       console.error(error);
       showToast({
@@ -103,7 +103,7 @@ const SettingsPage = () => {
       }
 
       setSettings(result.data);
-      applyAdminTheme(result.data.default_theme);
+      syncThemeFromSetting(result.data.default_theme);
 
       showToast({
         type: 'success',
@@ -234,8 +234,12 @@ const SettingsPage = () => {
                 onChange={handleChange}
                 className={inputClasses}
               >
-                <option className="bg-[#0A0A0A] text-white">Dark Premium</option>
-                <option className="bg-[#0A0A0A] text-white">Light</option>
+                <option value="Dark Premium" className="bg-[#0A0A0A] text-white">
+                  Dark Premium
+                </option>
+                <option value="Light" className="bg-[#0A0A0A] text-white">
+                  Light
+                </option>
               </select>
             </div>
 
@@ -261,9 +265,15 @@ const SettingsPage = () => {
                 onChange={handleChange}
                 className={inputClasses}
               >
-                <option className="bg-[#0A0A0A] text-white">Active</option>
-                <option className="bg-[#0A0A0A] text-white">Paused</option>
-                <option className="bg-[#0A0A0A] text-white">Internal</option>
+                <option value="Active" className="bg-[#0A0A0A] text-white">
+                  Active
+                </option>
+                <option value="Paused" className="bg-[#0A0A0A] text-white">
+                  Paused
+                </option>
+                <option value="Internal" className="bg-[#0A0A0A] text-white">
+                  Internal
+                </option>
               </select>
             </div>
           </div>
