@@ -15,11 +15,12 @@ const statusStyles: Record<string, string> = {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const normalized = status.toLowerCase();
   const styles =
-    statusStyles[normalized] || 'bg-white/5 text-white/70 border-white/10';
+    statusStyles[normalized] ||
+    'bg-black/[0.03] dark:bg-white/5 text-[var(--app-muted)] border-black/8 dark:border-white/10';
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${styles}`}
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${styles}`}
     >
       {status}
     </span>
