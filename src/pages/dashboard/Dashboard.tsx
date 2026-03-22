@@ -3,7 +3,6 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import StatusBadge from '@/components/dashboard/StatusBadge';
-import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -36,12 +35,7 @@ const DashboardPage = () => {
         setLoading(true);
         setError('');
 
-        const headers = await getAuthHeaders();
-
-        const response = await fetch('/api/requests', {
-          headers,
-        });
-
+        const response = await fetch('/api/requests');
         const result = await response.json();
 
         if (!response.ok) {
@@ -108,6 +102,9 @@ const DashboardPage = () => {
     return `${rate.toFixed(1)}%`;
   }, [requests]);
 
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-4 md:p-5 transition-colors duration-300';
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -116,7 +113,7 @@ const DashboardPage = () => {
       />
 
       {loading ? (
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6 text-white/55">
+        <div className="rounded-[1.75rem] glass-dark p-6 text-[var(--app-muted)]">
           Loading dashboard data...
         </div>
       ) : error ? (
@@ -134,78 +131,81 @@ const DashboardPage = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-2 rounded-[1.75rem] border border-white/6 glass-dark p-6">
+            <div className="xl:col-span-2 rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
+                <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)]">
                   Recent Requests
                 </h2>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-white/35">
+                <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--app-muted)]">
                   Live data
                 </span>
               </div>
 
               {recentRequests.length === 0 ? (
-                <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5 text-white/50">
-                  No requests yet.
+                <div className={subCardClasses}>
+                  <p className="text-[var(--app-muted)]">No requests yet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {recentRequests.map((item) => (
-                    <div
-                      key={item.id}
-                      className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-                    >
-                      <div>
-                        <h3 className="text-white font-medium text-lg">{item.name}</h3>
-                        <p className="text-white/50 text-sm mt-1">
-                          {item.project_category} •{' '}
-                          {item.budget_display || item.budget || 'No budget set'}
-                        </p>
-                        {item.company && (
-                          <p className="text-white/35 text-sm mt-1">{item.company}</p>
-                        )}
+                    <div key={item.id} className={subCardClasses}>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                          <h3 className="text-[var(--app-heading)] font-medium text-lg">
+                            {item.name}
+                          </h3>
+                          <p className="text-[var(--app-muted)] text-sm mt-1">
+                            {item.project_category} •{' '}
+                            {item.budget_display || item.budget || 'No budget set'}
+                          </p>
+                          {item.company && (
+                            <p className="text-[var(--app-muted)] text-sm mt-1">
+                              {item.company}
+                            </p>
+                          )}
+                        </div>
+                        <StatusBadge status={item.status} />
                       </div>
-                      <StatusBadge status={item.status} />
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Quick Summary
               </h2>
 
               <div className="space-y-5">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2">
                     Top Service Category
                   </p>
-                  <p className="text-white text-lg">{topCategory}</p>
+                  <p className="text-[var(--app-heading)] text-lg">{topCategory}</p>
                 </div>
 
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2">
                     Conversion Rate
                   </p>
-                  <p className="text-white text-lg">{conversionRate}</p>
+                  <p className="text-[var(--app-heading)] text-lg">{conversionRate}</p>
                 </div>
 
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2">
                     Latest Request
                   </p>
-                  <p className="text-white text-lg">
+                  <p className="text-[var(--app-heading)] text-lg">
                     {recentRequests[0]?.name || '—'}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2">
                     Next Priority
                   </p>
-                  <p className="text-white/65 leading-7">
+                  <p className="text-[var(--app-muted)] leading-7">
                     Review pending requests, qualify serious leads, and move
                     them into projects or revenue tracking as needed.
                   </p>
