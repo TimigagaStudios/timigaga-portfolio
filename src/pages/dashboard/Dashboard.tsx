@@ -80,9 +80,7 @@ const DashboardPage = () => {
     };
   }, [requests]);
 
-  const recentRequests = useMemo(() => {
-    return requests.slice(0, 5);
-  }, [requests]);
+  const recentRequests = useMemo(() => requests.slice(0, 5), [requests]);
 
   const topCategory = useMemo(() => {
     if (requests.length === 0) return '—';
