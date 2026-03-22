@@ -117,6 +117,9 @@ const AnalyticsPage = () => {
     ? ((statusCounts.closed / totalRequests) * 100).toFixed(1)
     : '0.0';
 
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 px-4 py-4 transition-colors duration-300';
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -125,7 +128,7 @@ const AnalyticsPage = () => {
       />
 
       {loading ? (
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6 text-white/55">
+        <div className="rounded-[1.75rem] glass-dark p-6 text-[var(--app-muted)]">
           Loading analytics...
         </div>
       ) : error ? (
@@ -142,62 +145,65 @@ const AnalyticsPage = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Status Distribution
               </h2>
 
               <div className="space-y-4">
                 {Object.entries(statusCounts).map(([status, count]) => (
-                  <div
-                    key={status}
-                    className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4"
-                  >
-                    <span className="text-white/70 capitalize">{status}</span>
-                    <span className="text-white text-lg font-semibold">{count}</span>
+                  <div key={status} className={subCardClasses}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[var(--app-muted)] capitalize">{status}</span>
+                      <span className="text-[var(--app-heading)] text-lg font-semibold">
+                        {count}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Service Demand
               </h2>
 
               {categoryCounts.length === 0 ? (
-                <p className="text-white/50">No category data available.</p>
+                <p className="text-[var(--app-muted)]">No category data available.</p>
               ) : (
                 <div className="space-y-4">
                   {categoryCounts.map(([category, count]) => (
-                    <div
-                      key={category}
-                      className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4"
-                    >
-                      <span className="text-white/70">{category}</span>
-                      <span className="text-white text-lg font-semibold">{count}</span>
+                    <div key={category} className={subCardClasses}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[var(--app-muted)]">{category}</span>
+                        <span className="text-[var(--app-heading)] text-lg font-semibold">
+                          {count}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Theme Preference
               </h2>
 
               {themeCounts.length === 0 ? (
-                <p className="text-white/50">No theme data available.</p>
+                <p className="text-[var(--app-muted)]">No theme data available.</p>
               ) : (
                 <div className="space-y-4">
                   {themeCounts.map(([theme, count]) => (
-                    <div
-                      key={theme}
-                      className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4"
-                    >
-                      <span className="text-white/70">{theme}</span>
-                      <span className="text-white text-lg font-semibold">{count}</span>
+                    <div key={theme} className={subCardClasses}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[var(--app-muted)]">{theme}</span>
+                        <span className="text-[var(--app-heading)] text-lg font-semibold">
+                          {count}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -205,46 +211,46 @@ const AnalyticsPage = () => {
             </div>
           </div>
 
-          <div className="mt-8 rounded-[1.75rem] border border-white/6 glass-dark p-6">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+          <div className="mt-8 rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
               Insight Summary
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-5 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Highest Demand Category
                 </p>
-                <p className="text-white text-xl font-semibold">
+                <p className="text-[var(--app-heading)] text-xl font-semibold">
                   {categoryCounts[0]?.[0] || '—'}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-5 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Most Common Theme Preference
                 </p>
-                <p className="text-white text-xl font-semibold">
+                <p className="text-[var(--app-heading)] text-xl font-semibold">
                   {themeCounts[0]?.[0] || '—'}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-5 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Request Health
                 </p>
-                <p className="text-white/70 leading-8">
+                <p className="text-[var(--app-muted)] leading-8">
                   {statusCounts.pending > statusCounts.contacted
                     ? 'More requests are still waiting for review. Prioritize response speed to improve conversions.'
                     : 'Request handling is moving in a healthier direction with more reviewed/contacted records.'}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-5 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Revenue Readiness
                 </p>
-                <p className="text-white/70 leading-8">
+                <p className="text-[var(--app-muted)] leading-8">
                   {requestsWithBudget > 0
                     ? 'Budget normalization is active. Revenue tracking can now expand safely by currency.'
                     : 'Budget normalization data is still limited. Continue collecting richer request details.'}
