@@ -3,6 +3,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import StatusBadge from '@/components/dashboard/StatusBadge';
+import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -40,17 +41,22 @@ const RevenuePage = () => {
         setLoading(true);
         setError('');
 
-        const response = await fetch('/api/requests');
+        const headers = await getAuthHeaders();
+
+        const response = await fetch('/api/requests', {
+          headers,
+        });
+
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result?.error || 'Failed to fetch revenue data');
+          throw new Error(result?.error || `Revenue request failed with status ${response.status}`);
         }
 
         setRequests(result.data || []);
       } catch (err) {
-        console.error(err);
-        setError('Unable to load revenue data right now.');
+        console.error('Revenue fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Unknown revenue error');
       } finally {
         setLoading(false);
       }
@@ -145,7 +151,8 @@ const RevenuePage = () => {
         </div>
       ) : error ? (
         <div className="rounded-[1.75rem] border border-red-500/20 bg-red-500/10 p-6 text-red-300">
-          {error}
+          <p className="font-semibold mb-2">Revenue failed to load</p>
+          <p className="text-sm break-words">{error}</p>
         </div>
       ) : (
         <>
