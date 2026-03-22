@@ -168,6 +168,12 @@ const ProjectsPage = () => {
     }
   };
 
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-4 md:p-5 transition-colors duration-300';
+
+  const mutedLabel =
+    'text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2';
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -176,29 +182,29 @@ const ProjectsPage = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
-        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
             Active Projects
           </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
             {activeProjects}
           </h3>
         </div>
 
-        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
             In Progress
           </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
             {inProgressProjects}
           </h3>
         </div>
 
-        <div className="rounded-[1.5rem] border border-white/6 glass-dark p-5 md:p-6">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 mb-3">
+        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
             Completed
           </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white">
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
             {completedProjects}
           </h3>
         </div>
@@ -220,7 +226,7 @@ const ProjectsPage = () => {
           }
         >
           {loading ? (
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
+            <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-6 text-[var(--app-muted)] transition-colors duration-300">
               Loading projects...
             </div>
           ) : error ? (
@@ -235,38 +241,39 @@ const ProjectsPage = () => {
           ) : (
             <div className="space-y-4">
               {filteredProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-                >
-                  <div>
-                    <p className="text-white font-medium text-lg">{project.project_name}</p>
-                    <p className="text-white/45 text-sm mt-1">
-                      {project.client_name} • {project.service}
-                    </p>
-                    <p className="text-white/35 text-sm mt-1">
-                      {project.budget_display || project.budget || 'No value set'}
-                    </p>
-                  </div>
+                <div key={project.id} className={subCardClasses}>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <p className="text-[var(--app-heading)] font-medium text-lg">
+                        {project.project_name}
+                      </p>
+                      <p className="text-[var(--app-muted)] text-sm mt-1">
+                        {project.client_name} • {project.service}
+                      </p>
+                      <p className="text-[var(--app-muted)] text-sm mt-1">
+                        {project.budget_display || project.budget || 'No value set'}
+                      </p>
+                    </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span
-                      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
-                        stageStyles[project.stage]
-                      }`}
-                    >
-                      {project.stage}
-                    </span>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span
+                        className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
+                          stageStyles[project.stage]
+                        }`}
+                      >
+                        {project.stage}
+                      </span>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                      onClick={() => openProjectDetails(project)}
-                    >
-                      View
-                    </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                        onClick={() => openProjectDetails(project)}
+                      >
+                        View
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -286,10 +293,12 @@ const ProjectsPage = () => {
           ) : (
             <div className="space-y-5">
               <div>
-                <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
+                <h3 className="text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-2">
                   {selectedProject.project_name}
                 </h3>
-                <p className="text-white/50 text-sm">{selectedProject.client_name}</p>
+                <p className="text-[var(--app-muted)] text-sm">
+                  {selectedProject.client_name}
+                </p>
               </div>
 
               {[
@@ -303,26 +312,22 @@ const ProjectsPage = () => {
                 ],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    {label}
-                  </p>
-                  <p className="text-white/75">{value}</p>
+                  <p className={mutedLabel}>{label}</p>
+                  <p className="text-[var(--app-heading)]">{value}</p>
                 </div>
               ))}
 
               <div>
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                  Message
-                </p>
-                <p className="text-white/70 leading-8 whitespace-pre-wrap">
+                <p className={mutedLabel}>Message</p>
+                <p className="text-[var(--app-muted)] leading-8 whitespace-pre-wrap">
                   {selectedProject.message || '—'}
                 </p>
               </div>
 
               <NotesPanel projectId={selectedProject.id} />
 
-              <div className="pt-4 border-t border-white/8">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="pt-4 border-t border-black/8 dark:border-white/8 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Update Stage
                 </p>
 
@@ -330,7 +335,7 @@ const ProjectsPage = () => {
                   <select
                     value={stageValue}
                     onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
-                    className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
+                    className="flex-1 rounded-xl bg-black/[0.03] dark:bg-[#0A0A0A] border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] outline-none focus:border-[#95EF90] transition-colors duration-300"
                   >
                     {stageOptions.map((stage) => (
                       <option
