@@ -134,7 +134,7 @@ const SettingsPage = () => {
           title="Settings"
           subtitle="Manage studio profile details, internal preferences, integrations, and dashboard access settings."
         />
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6 text-white/55">
+        <div className="rounded-[1.75rem] glass-dark p-6 text-[var(--app-muted)]">
           Loading settings...
         </div>
       </DashboardShell>
@@ -142,7 +142,13 @@ const SettingsPage = () => {
   }
 
   const inputClasses =
-    'w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-[#95EF90]';
+    'w-full rounded-xl bg-black/[0.03] dark:bg-white/5 border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] outline-none transition-all placeholder:text-[var(--app-muted)] focus:border-[#95EF90]';
+
+  const labelClasses =
+    'block text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3';
+
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-5 transition-colors duration-300';
 
   return (
     <DashboardShell>
@@ -158,9 +164,7 @@ const SettingsPage = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Studio Name
-              </label>
+              <label className={labelClasses}>Studio Name</label>
               <input
                 name="studio_name"
                 value={settings.studio_name}
@@ -170,9 +174,7 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Founder Name
-              </label>
+              <label className={labelClasses}>Founder Name</label>
               <input
                 name="founder_name"
                 value={settings.founder_name}
@@ -182,9 +184,7 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Public Email
-              </label>
+              <label className={labelClasses}>Public Email</label>
               <input
                 name="public_email"
                 value={settings.public_email}
@@ -194,9 +194,7 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Phone
-              </label>
+              <label className={labelClasses}>Phone</label>
               <input
                 name="phone"
                 value={settings.phone}
@@ -206,9 +204,7 @@ const SettingsPage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Location
-              </label>
+              <label className={labelClasses}>Location</label>
               <input
                 name="location"
                 value={settings.location}
@@ -225,9 +221,7 @@ const SettingsPage = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Default Theme
-              </label>
+              <label className={labelClasses}>Default Theme</label>
               <select
                 name="default_theme"
                 value={settings.default_theme}
@@ -244,9 +238,7 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Accent Color
-              </label>
+              <label className={labelClasses}>Accent Color</label>
               <input
                 name="accent_color"
                 value={settings.accent_color}
@@ -256,9 +248,7 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
-                Brand Status
-              </label>
+              <label className={labelClasses}>Brand Status</label>
               <select
                 name="brand_status"
                 value={settings.brand_status}
@@ -297,32 +287,32 @@ const SettingsPage = () => {
           subtitle="Current operational connection status for the studio stack."
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+            <div className={subCardClasses}>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                 Supabase
               </p>
-              <p className="text-white text-lg">Connected</p>
-              <p className="text-white/45 text-sm mt-2">
+              <p className="text-[var(--app-heading)] text-lg">Connected</p>
+              <p className="text-[var(--app-muted)] text-sm mt-2">
                 Database, storage, auth.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+            <div className={subCardClasses}>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                 Brevo
               </p>
-              <p className="text-white text-lg">Connected</p>
-              <p className="text-white/45 text-sm mt-2">
+              <p className="text-[var(--app-heading)] text-lg">Connected</p>
+              <p className="text-[var(--app-muted)] text-sm mt-2">
                 Transactional email active.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-5">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+            <div className={subCardClasses}>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                 Vercel
               </p>
-              <p className="text-white text-lg">Connected</p>
-              <p className="text-white/45 text-sm mt-2">
+              <p className="text-[var(--app-heading)] text-lg">Connected</p>
+              <p className="text-[var(--app-muted)] text-sm mt-2">
                 Frontend and API deployment active.
               </p>
             </div>
@@ -335,8 +325,10 @@ const SettingsPage = () => {
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
             <div>
-              <p className="text-white font-medium">Authenticated admin session</p>
-              <p className="text-white/45 text-sm mt-2 max-w-2xl">
+              <p className="text-[var(--app-heading)] font-medium">
+                Authenticated admin session
+              </p>
+              <p className="text-[var(--app-muted)] text-sm mt-2 max-w-2xl">
                 Dashboard access is currently protected through Supabase authentication and secured API routes.
               </p>
             </div>
