@@ -186,6 +186,12 @@ const RequestsPage = () => {
     }
   };
 
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-4 md:p-5 transition-colors duration-300';
+
+  const mutedLabel =
+    'text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-2';
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -209,7 +215,7 @@ const RequestsPage = () => {
           }
         >
           {loading ? (
-            <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
+            <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-6 text-[var(--app-muted)] transition-colors duration-300">
               Loading requests...
             </div>
           ) : error ? (
@@ -224,30 +230,33 @@ const RequestsPage = () => {
           ) : (
             <div className="space-y-4">
               {filteredRequests.map((request) => (
-                <div
-                  key={request.id}
-                  className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-                >
-                  <div className="min-w-0">
-                    <p className="text-white font-medium text-lg">{request.name}</p>
-                    <p className="text-white/45 text-sm mt-1">{request.email}</p>
-                    <p className="text-white/35 text-sm mt-1">
-                      {request.project_category} •{' '}
-                      {request.budget_display || request.budget || 'No budget set'}
-                    </p>
-                  </div>
+                <div key={request.id} className={subCardClasses}>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-[var(--app-heading)] font-medium text-lg">
+                        {request.name}
+                      </p>
+                      <p className="text-[var(--app-muted)] text-sm mt-1">
+                        {request.email}
+                      </p>
+                      <p className="text-[var(--app-muted)] text-sm mt-1">
+                        {request.project_category} •{' '}
+                        {request.budget_display || request.budget || 'No budget set'}
+                      </p>
+                    </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    <StatusBadge status={request.status} />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                      onClick={() => openRequestDetails(request)}
-                    >
-                      View
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <StatusBadge status={request.status} />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                        onClick={() => openRequestDetails(request)}
+                      >
+                        View
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -267,10 +276,10 @@ const RequestsPage = () => {
           ) : (
             <div className="space-y-5">
               <div>
-                <h3 className="text-2xl font-semibold tracking-tight text-white mb-2">
+                <h3 className="text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-2">
                   {selectedRequest.name}
                 </h3>
-                <p className="text-white/50 text-sm">{selectedRequest.email}</p>
+                <p className="text-[var(--app-muted)] text-sm">{selectedRequest.email}</p>
               </div>
 
               {[
@@ -288,26 +297,20 @@ const RequestsPage = () => {
                 ['Theme', selectedRequest.theme || '—'],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                    {label}
-                  </p>
-                  <p className="text-white/75">{value}</p>
+                  <p className={mutedLabel}>{label}</p>
+                  <p className="text-[var(--app-heading)]">{value}</p>
                 </div>
               ))}
 
               <div>
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                  Message
-                </p>
-                <p className="text-white/70 leading-8 whitespace-pre-wrap">
+                <p className={mutedLabel}>Message</p>
+                <p className="text-[var(--app-muted)] leading-8 whitespace-pre-wrap">
                   {selectedRequest.message}
                 </p>
               </div>
 
               <div>
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-2">
-                  Reference Images
-                </p>
+                <p className={mutedLabel}>Reference Images</p>
                 {selectedRequest.reference_images &&
                 selectedRequest.reference_images.length > 0 ? (
                   <div className="space-y-2">
@@ -317,21 +320,21 @@ const RequestsPage = () => {
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block text-sm text-[#95EF90] hover:text-white transition-colors break-all"
+                        className="block text-sm text-[#95EF90] hover:text-[var(--app-heading)] transition-colors break-all"
                       >
                         View reference image {index + 1}
                       </a>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-white/45">No reference images</p>
+                  <p className="text-[var(--app-muted)]">No reference images</p>
                 )}
               </div>
 
               <NotesPanel clientRequestId={selectedRequest.id} />
 
-              <div className="pt-4 border-t border-white/8">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+              <div className="pt-4 border-t border-black/8 dark:border-white/8 transition-colors duration-300">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
                   Update Status
                 </p>
 
@@ -339,7 +342,7 @@ const RequestsPage = () => {
                   <select
                     value={statusValue}
                     onChange={(e) => setStatusValue(e.target.value)}
-                    className="flex-1 rounded-xl bg-[#0A0A0A] border border-white/10 px-4 py-3 text-sm text-white outline-none focus:border-[#95EF90]"
+                    className="flex-1 rounded-xl bg-black/[0.03] dark:bg-[#0A0A0A] border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] outline-none focus:border-[#95EF90] transition-colors duration-300"
                   >
                     {statusOptions.map((status) => (
                       <option
