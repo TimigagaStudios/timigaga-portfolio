@@ -10,9 +10,11 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const STORAGE_KEY = 'timigaga-admin-theme';
+
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
-    const savedTheme = localStorage.getItem('timigaga-admin-theme');
+    const savedTheme = localStorage.getItem(STORAGE_KEY);
 
     if (savedTheme === 'dark' || savedTheme === 'light') {
       return savedTheme;
@@ -30,7 +32,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       root.classList.remove('dark');
     }
 
-    localStorage.setItem('timigaga-admin-theme', theme);
+    localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
   const setTheme = (value: ThemeMode) => {
