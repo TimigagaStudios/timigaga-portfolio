@@ -3,6 +3,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import StatusBadge from '@/components/dashboard/StatusBadge';
+import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -35,7 +36,12 @@ const DashboardPage = () => {
         setLoading(true);
         setError('');
 
-        const response = await fetch('/api/requests');
+        const headers = await getAuthHeaders();
+
+        const response = await fetch('/api/requests', {
+          headers,
+        });
+
         const result = await response.json();
 
         if (!response.ok) {
