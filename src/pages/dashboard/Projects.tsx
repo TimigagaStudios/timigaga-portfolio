@@ -72,13 +72,13 @@ const ProjectsPage = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result?.error || 'Failed to fetch projects');
+        throw new Error(result?.error || `Projects request failed with status ${response.status}`);
       }
 
       setProjects(result.data || []);
     } catch (err) {
-      console.error(err);
-      setError('Unable to load projects right now.');
+      console.error('Projects fetch error:', err);
+      setError(err instanceof Error ? err.message : 'Unknown projects error');
     } finally {
       setLoading(false);
     }
@@ -181,189 +181,194 @@ const ProjectsPage = () => {
         subtitle="Monitor active client projects, delivery stages, deadlines, and project value from a clean internal workspace."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
-        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
-            Active Projects
-          </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
-            {activeProjects}
-          </h3>
+      {loading ? (
+        <div className="rounded-[1.75rem] glass-dark p-6 text-[var(--app-muted)]">
+          Loading projects...
         </div>
-
-        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
-            In Progress
-          </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
-            {inProgressProjects}
-          </h3>
+      ) : error ? (
+        <div className="rounded-[1.75rem] border border-red-500/20 bg-red-500/10 p-6 text-red-300">
+          <p className="font-semibold mb-2">Projects failed to load</p>
+          <p className="text-sm break-words">{error}</p>
         </div>
-
-        <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
-            Completed
-          </p>
-          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
-            {completedProjects}
-          </h3>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
-        <SectionCard
-          title="Project Pipeline"
-          subtitle="Search and filter project records, then open a project to manage its delivery stage."
-          rightSlot={
-            <FilterBar
-              searchValue={search}
-              onSearchChange={setSearch}
-              searchPlaceholder="Search projects..."
-              filterValue={stageFilter}
-              onFilterChange={setStageFilter}
-              filterOptions={['All Stages', ...stageOptions]}
-            />
-          }
-        >
-          {loading ? (
-            <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-6 text-[var(--app-muted)] transition-colors duration-300">
-              Loading projects...
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-8">
+            <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
+                Active Projects
+              </p>
+              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
+                {activeProjects}
+              </h3>
             </div>
-          ) : error ? (
-            <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-red-300">
-              {error}
+
+            <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
+                In Progress
+              </p>
+              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
+                {inProgressProjects}
+              </h3>
             </div>
-          ) : filteredProjects.length === 0 ? (
-            <EmptyState
-              title="No projects found"
-              description="Projects created from request conversion will appear here. Try adjusting your search or filter."
-            />
-          ) : (
-            <div className="space-y-4">
-              {filteredProjects.map((project) => (
-                <div key={project.id} className={subCardClasses}>
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <p className="text-[var(--app-heading)] font-medium text-lg">
-                        {project.project_name}
-                      </p>
-                      <p className="text-[var(--app-muted)] text-sm mt-1">
-                        {project.client_name} • {project.service}
-                      </p>
-                      <p className="text-[var(--app-muted)] text-sm mt-1">
-                        {project.budget_display || project.budget || 'No value set'}
-                      </p>
+
+            <div className="rounded-[1.5rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[var(--app-muted)] mb-3">
+                Completed
+              </p>
+              <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--app-heading)]">
+                {completedProjects}
+              </h3>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
+            <SectionCard
+              title="Project Pipeline"
+              subtitle="Search and filter project records, then open a project to manage its delivery stage."
+              rightSlot={
+                <FilterBar
+                  searchValue={search}
+                  onSearchChange={setSearch}
+                  searchPlaceholder="Search projects..."
+                  filterValue={stageFilter}
+                  onFilterChange={setStageFilter}
+                  filterOptions={['All Stages', ...stageOptions]}
+                />
+              }
+            >
+              {filteredProjects.length === 0 ? (
+                <EmptyState
+                  title="No projects found"
+                  description="Projects created from request conversion will appear here. Try adjusting your search or filter."
+                />
+              ) : (
+                <div className="space-y-4">
+                  {filteredProjects.map((project) => (
+                    <div key={project.id} className={subCardClasses}>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                          <p className="text-[var(--app-heading)] font-medium text-lg">
+                            {project.project_name}
+                          </p>
+                          <p className="text-[var(--app-muted)] text-sm mt-1">
+                            {project.client_name} • {project.service}
+                          </p>
+                          <p className="text-[var(--app-muted)] text-sm mt-1">
+                            {project.budget_display || project.budget || 'No value set'}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span
+                            className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
+                              stageStyles[project.stage]
+                            }`}
+                          >
+                            {project.stage}
+                          </span>
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="text-[11px] uppercase tracking-[0.16em] font-medium"
+                            onClick={() => openProjectDetails(project)}
+                          >
+                            View
+                          </Button>
+                        </div>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              )}
+            </SectionCard>
 
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span
-                        className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.16em] ${
-                          stageStyles[project.stage]
-                        }`}
+            <SectionCard
+              title="Project Details"
+              subtitle="Inspect the selected project and update its current stage."
+            >
+              {!selectedProject ? (
+                <EmptyState
+                  title="No project selected"
+                  description="Select a project from the pipeline to review its details and update progress."
+                />
+              ) : (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-2">
+                      {selectedProject.project_name}
+                    </h3>
+                    <p className="text-[var(--app-muted)] text-sm">
+                      {selectedProject.client_name}
+                    </p>
+                  </div>
+
+                  {[
+                    ['Client Email', selectedProject.client_email || '—'],
+                    ['Company', selectedProject.company || '—'],
+                    ['Service', selectedProject.service],
+                    ['Country', selectedProject.country || '—'],
+                    [
+                      'Budget',
+                      selectedProject.budget_display || selectedProject.budget || '—',
+                    ],
+                  ].map(([label, value]) => (
+                    <div key={label}>
+                      <p className={mutedLabel}>{label}</p>
+                      <p className="text-[var(--app-heading)]">{value}</p>
+                    </div>
+                  ))}
+
+                  <div>
+                    <p className={mutedLabel}>Message</p>
+                    <p className="text-[var(--app-muted)] leading-8 whitespace-pre-wrap">
+                      {selectedProject.message || '—'}
+                    </p>
+                  </div>
+
+                  <NotesPanel projectId={selectedProject.id} />
+
+                  <div className="pt-4 border-t border-black/8 dark:border-white/8 transition-colors duration-300">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
+                      Update Stage
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <select
+                        value={stageValue}
+                        onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
+                        className="flex-1 rounded-xl bg-black/[0.03] dark:bg-[#0A0A0A] border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] outline-none focus:border-[#95EF90] transition-colors duration-300"
                       >
-                        {project.stage}
-                      </span>
+                        {stageOptions.map((stage) => (
+                          <option
+                            key={stage}
+                            value={stage}
+                            className="bg-[#0A0A0A] text-white"
+                          >
+                            {stage}
+                          </option>
+                        ))}
+                      </select>
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="aura"
                         size="sm"
+                        onClick={handleStageUpdate}
+                        disabled={updatingStage}
                         className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                        onClick={() => openProjectDetails(project)}
                       >
-                        View
+                        {updatingStage ? 'Saving...' : 'Save Stage'}
                       </Button>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-
-        <SectionCard
-          title="Project Details"
-          subtitle="Inspect the selected project and update its current stage."
-        >
-          {!selectedProject ? (
-            <EmptyState
-              title="No project selected"
-              description="Select a project from the pipeline to review its details and update progress."
-            />
-          ) : (
-            <div className="space-y-5">
-              <div>
-                <h3 className="text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-2">
-                  {selectedProject.project_name}
-                </h3>
-                <p className="text-[var(--app-muted)] text-sm">
-                  {selectedProject.client_name}
-                </p>
-              </div>
-
-              {[
-                ['Client Email', selectedProject.client_email || '—'],
-                ['Company', selectedProject.company || '—'],
-                ['Service', selectedProject.service],
-                ['Country', selectedProject.country || '—'],
-                [
-                  'Budget',
-                  selectedProject.budget_display || selectedProject.budget || '—',
-                ],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <p className={mutedLabel}>{label}</p>
-                  <p className="text-[var(--app-heading)]">{value}</p>
-                </div>
-              ))}
-
-              <div>
-                <p className={mutedLabel}>Message</p>
-                <p className="text-[var(--app-muted)] leading-8 whitespace-pre-wrap">
-                  {selectedProject.message || '—'}
-                </p>
-              </div>
-
-              <NotesPanel projectId={selectedProject.id} />
-
-              <div className="pt-4 border-t border-black/8 dark:border-white/8 transition-colors duration-300">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
-                  Update Stage
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <select
-                    value={stageValue}
-                    onChange={(e) => setStageValue(e.target.value as ProjectItem['stage'])}
-                    className="flex-1 rounded-xl bg-black/[0.03] dark:bg-[#0A0A0A] border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] outline-none focus:border-[#95EF90] transition-colors duration-300"
-                  >
-                    {stageOptions.map((stage) => (
-                      <option
-                        key={stage}
-                        value={stage}
-                        className="bg-[#0A0A0A] text-white"
-                      >
-                        {stage}
-                      </option>
-                    ))}
-                  </select>
-
-                  <Button
-                    type="button"
-                    variant="aura"
-                    size="sm"
-                    onClick={handleStageUpdate}
-                    disabled={updatingStage}
-                    className="text-[11px] uppercase tracking-[0.16em] font-medium"
-                  >
-                    {updatingStage ? 'Saving...' : 'Save Stage'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-        </SectionCard>
-      </div>
+              )}
+            </SectionCard>
+          </div>
+        </>
+      )}
     </DashboardShell>
   );
 };
