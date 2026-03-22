@@ -3,7 +3,6 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import DashboardTopbar from '@/components/dashboard/DashboardTopbar';
 import MetricCard from '@/components/dashboard/MetricCard';
 import StatusBadge from '@/components/dashboard/StatusBadge';
-import { getAuthHeaders } from '@/lib/auth';
 
 type ClientRequest = {
   id: string;
@@ -41,12 +40,7 @@ const RevenuePage = () => {
         setLoading(true);
         setError('');
 
-        const headers = await getAuthHeaders();
-
-        const response = await fetch('/api/requests', {
-          headers,
-        });
-
+        const response = await fetch('/api/requests');
         const result = await response.json();
 
         if (!response.ok) {
@@ -132,6 +126,12 @@ const RevenuePage = () => {
     }
   };
 
+  const subCardClasses =
+    'rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-4 transition-colors duration-300';
+
+  const tableCellBase =
+    'border-y border-black/8 dark:border-white/6 transition-colors duration-300';
+
   return (
     <DashboardShell>
       <DashboardTopbar
@@ -140,7 +140,7 @@ const RevenuePage = () => {
       />
 
       {loading ? (
-        <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6 text-white/55">
+        <div className="rounded-[1.75rem] glass-dark p-6 text-[var(--app-muted)]">
           Loading revenue data...
         </div>
       ) : error ? (
@@ -169,58 +169,62 @@ const RevenuePage = () => {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Pipeline Value by Currency
               </h2>
 
               {groupedPipelineTotals.length === 0 ? (
-                <p className="text-white/50">No normalized budget data yet.</p>
+                <p className="text-[var(--app-muted)]">No normalized budget data yet.</p>
               ) : (
                 <div className="space-y-4">
                   {groupedPipelineTotals.map((item: CurrencyTotals) => (
                     <div
                       key={`pipeline-${item.currency}`}
-                      className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 flex items-center justify-between"
+                      className={subCardClasses}
                     >
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-1">
-                          {item.currency}
-                        </p>
-                        <p className="text-white text-xl font-semibold">
-                          {formatCurrency(item.total, item.currency)}
-                        </p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-1">
+                            {item.currency}
+                          </p>
+                          <p className="text-[var(--app-heading)] text-xl font-semibold">
+                            {formatCurrency(item.total, item.currency)}
+                          </p>
+                        </div>
+                        <span className="text-[var(--app-muted)] text-sm">Pipeline</span>
                       </div>
-                      <span className="text-white/40 text-sm">Pipeline</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/6 glass-dark p-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white mb-6">
+            <div className="rounded-[1.75rem] glass-dark p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)] mb-6">
                 Closed Value by Currency
               </h2>
 
               {groupedClosedTotals.length === 0 ? (
-                <p className="text-white/50">No closed deal values yet.</p>
+                <p className="text-[var(--app-muted)]">No closed deal values yet.</p>
               ) : (
                 <div className="space-y-4">
                   {groupedClosedTotals.map((item: CurrencyTotals) => (
                     <div
                       key={`closed-${item.currency}`}
-                      className="rounded-2xl border border-white/6 bg-white/[0.02] p-4 flex items-center justify-between"
+                      className={subCardClasses}
                     >
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-1">
-                          {item.currency}
-                        </p>
-                        <p className="text-white text-xl font-semibold">
-                          {formatCurrency(item.total, item.currency)}
-                        </p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-1">
+                            {item.currency}
+                          </p>
+                          <p className="text-[var(--app-heading)] text-xl font-semibold">
+                            {formatCurrency(item.total, item.currency)}
+                          </p>
+                        </div>
+                        <span className="text-[#95EF90] text-sm">Closed</span>
                       </div>
-                      <span className="text-[#95EF90] text-sm">Closed</span>
                     </div>
                   ))}
                 </div>
@@ -228,18 +232,18 @@ const RevenuePage = () => {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-white/6 glass-dark p-5 md:p-6">
+          <div className="rounded-[1.75rem] glass-dark p-5 md:p-6 shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-[var(--app-heading)]">
                 Budget Requests
               </h2>
-              <span className="text-[11px] uppercase tracking-[0.2em] text-white/35">
+              <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--app-muted)]">
                 Live data
               </span>
             </div>
 
             {budgetRequests.length === 0 ? (
-              <div className="rounded-2xl border border-white/6 bg-white/[0.02] p-6 text-white/55">
+              <div className="rounded-2xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 p-6 text-[var(--app-muted)] transition-colors duration-300">
                 No budget-carrying requests found.
               </div>
             ) : (
@@ -247,25 +251,25 @@ const RevenuePage = () => {
                 <table className="w-full min-w-[980px] border-separate border-spacing-y-3">
                   <thead>
                     <tr>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Client
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Category
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Country
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Budget
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Currency
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Amount
                       </th>
-                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-white/35 font-medium px-4">
+                      <th className="text-left text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] font-medium px-4">
                         Status
                       </th>
                     </tr>
@@ -273,35 +277,39 @@ const RevenuePage = () => {
 
                   <tbody>
                     {budgetRequests.map((request) => (
-                      <tr key={request.id} className="bg-white/[0.02]">
-                        <td className="px-4 py-4 rounded-l-2xl border-y border-l border-white/6">
+                      <tr key={request.id} className="bg-black/[0.03] dark:bg-white/[0.02] transition-colors duration-300">
+                        <td className={`px-4 py-4 rounded-l-2xl border-l ${tableCellBase}`}>
                           <div>
-                            <p className="text-white font-medium">{request.name}</p>
-                            <p className="text-white/45 text-sm mt-1">{request.email}</p>
+                            <p className="text-[var(--app-heading)] font-medium">
+                              {request.name}
+                            </p>
+                            <p className="text-[var(--app-muted)] text-sm mt-1">
+                              {request.email}
+                            </p>
                           </div>
                         </td>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/70">
+                        <td className={`px-4 py-4 ${tableCellBase} text-[var(--app-heading)]`}>
                           {request.project_category}
                         </td>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/45">
+                        <td className={`px-4 py-4 ${tableCellBase} text-[var(--app-muted)]`}>
                           {request.country || '—'}
                         </td>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/70">
+                        <td className={`px-4 py-4 ${tableCellBase} text-[var(--app-heading)]`}>
                           {request.budget_display || request.budget || '—'}
                         </td>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/45">
+                        <td className={`px-4 py-4 ${tableCellBase} text-[var(--app-muted)]`}>
                           {request.budget_currency || '—'}
                         </td>
 
-                        <td className="px-4 py-4 border-y border-white/6 text-white/45">
+                        <td className={`px-4 py-4 ${tableCellBase} text-[var(--app-muted)]`}>
                           {request.budget_amount ?? '—'}
                         </td>
 
-                        <td className="px-4 py-4 rounded-r-2xl border-y border-r border-white/6">
+                        <td className={`px-4 py-4 rounded-r-2xl border-r ${tableCellBase}`}>
                           <StatusBadge status={request.status} />
                         </td>
                       </tr>
