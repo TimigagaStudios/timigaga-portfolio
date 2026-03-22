@@ -12,7 +12,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
-    const savedTheme = localStorage.getItem('clientradar-theme');
+    const savedTheme = localStorage.getItem('timigaga-admin-theme');
 
     if (savedTheme === 'dark' || savedTheme === 'light') {
       return savedTheme;
@@ -30,7 +30,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       root.classList.remove('dark');
     }
 
-    localStorage.setItem('clientradar-theme', theme);
+    localStorage.setItem('timigaga-admin-theme', theme);
   }, [theme]);
 
   const setTheme = (value: ThemeMode) => {
