@@ -1,25 +1,47 @@
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { requireAdmin } from './_utils/requireAdmin';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
-    return res.status(500).json({
-      success: false,
-      error: 'Missing Supabase environment variables',
-    });
-  }
+  try {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
+      return res.status(500).json({
+        success: false,
+        error: 'Missing Supabase environment variables',
+      });
+    }
 
-  const user = await requireAdmin(req, res);
-  if (!user) return;
+    const authHeader = req.headers.authorization;
 
-  const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Missing authorization token',
+      });
+    }
 
-  if (req.method === 'GET') {
-    try {
+    const token = authHeader.replace('Bearer ', '');
+
+    const supabaseAuthClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAuthClient.auth.getUser(token);
+
+    if (authError || !user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Unauthorized',
+      });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+    if (req.method === 'GET') {
       const { data, error } = await supabase
         .from('studio_settings')
         .select('*')
@@ -37,17 +59,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         success: true,
         data,
       });
-    } catch (error) {
-      console.error('Settings GET error:', error);
-      return res.status(500).json({
-        success: false,
-        error: 'Internal server error',
-      });
     }
-  }
 
-  if (req.method === 'PATCH') {
-    try {
+    if (req.method === 'PATCH') {
       const {
         id,
         studio_name,
@@ -94,17 +108,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         success: true,
         data,
       });
-    } catch (error) {
-      console.error('Settings PATCH error:', error);
-      return res.status(500).json({
-        success: false,
-        error: 'Internal server error',
-      });
     }
-  }
 
-  return res.status(405).json({
-    success: false,
-    error: 'Method not allowed',
-  });
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed',
+    });
+  } catch (error) {
+    console.error('Settings API error:', error);
+
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Internal server error',
+    });
+  }
 }
