@@ -110,8 +110,8 @@ const NotesPanel = ({ clientRequestId, projectId }: NotesPanelProps) => {
   };
 
   return (
-    <div className="pt-4 border-t border-white/8">
-      <p className="text-[11px] uppercase tracking-[0.22em] text-white/35 mb-3">
+    <div className="pt-4 border-t border-black/8 dark:border-white/8 transition-colors duration-300">
+      <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--app-muted)] mb-3">
         Internal Notes
       </p>
 
@@ -121,7 +121,7 @@ const NotesPanel = ({ clientRequestId, projectId }: NotesPanelProps) => {
           onChange={(e) => setContent(e.target.value)}
           rows={4}
           placeholder="Add a note, follow-up reminder, project observation, or internal context..."
-          className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none resize-none focus:border-[#95EF90]"
+          className="w-full rounded-xl bg-black/[0.03] dark:bg-white/5 border border-black/8 dark:border-white/10 px-4 py-3 text-sm text-[var(--app-heading)] placeholder:text-[var(--app-muted)] outline-none resize-none focus:border-[#95EF90] transition-colors duration-300"
         />
 
         <Button
@@ -137,20 +137,20 @@ const NotesPanel = ({ clientRequestId, projectId }: NotesPanelProps) => {
       </div>
 
       {loading ? (
-        <p className="text-white/45 text-sm">Loading notes...</p>
+        <p className="text-[var(--app-muted)] text-sm">Loading notes...</p>
       ) : notes.length === 0 ? (
-        <p className="text-white/45 text-sm">No notes yet.</p>
+        <p className="text-[var(--app-muted)] text-sm">No notes yet.</p>
       ) : (
         <div className="space-y-3">
           {notes.map((note) => (
             <div
               key={note.id}
-              className="rounded-xl border border-white/6 bg-white/[0.02] px-4 py-4"
+              className="rounded-xl bg-black/[0.03] dark:bg-white/[0.02] border border-black/8 dark:border-white/6 px-4 py-4 transition-colors duration-300"
             >
-              <p className="text-white/75 text-sm leading-7 whitespace-pre-wrap">
+              <p className="text-[var(--app-heading)] text-sm leading-7 whitespace-pre-wrap">
                 {note.content}
               </p>
-              <p className="text-white/35 text-xs mt-3">
+              <p className="text-[var(--app-muted)] text-xs mt-3">
                 {new Date(note.created_at).toLocaleString()}
               </p>
             </div>
