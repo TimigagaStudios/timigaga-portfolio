@@ -7,7 +7,7 @@ interface DashboardShellProps {
 
 const DashboardShell: React.FC<DashboardShellProps> = ({ children }) => {
   return (
-    <div className="pt-28 md:pt-32 pb-20 bg-black min-h-screen">
+    <div className="pt-28 md:pt-32 pb-20 min-h-screen bg-[var(--app-bg)] text-[var(--app-text)] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           <DashboardSidebar />
