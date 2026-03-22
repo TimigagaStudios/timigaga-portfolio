@@ -14,12 +14,12 @@ const DashboardSidebar = () => {
   const location = useLocation();
 
   return (
-    <aside className="w-full lg:w-[260px] shrink-0 rounded-[1.75rem] border border-white/6 glass-dark p-5 lg:p-6 h-fit">
+    <aside className="w-full lg:w-[260px] shrink-0 rounded-[1.75rem] glass-dark p-5 lg:p-6 h-fit shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-colors duration-300">
       <div className="mb-8">
-        <p className="text-white/35 uppercase tracking-[0.32em] text-[10px] mb-3">
+        <p className="text-[var(--app-muted)] uppercase tracking-[0.32em] text-[10px] mb-3">
           Internal
         </p>
-        <h2 className="text-xl font-semibold tracking-tight text-white">
+        <h2 className="text-xl font-semibold tracking-tight text-[var(--app-heading)]">
           Dashboard
         </h2>
       </div>
@@ -34,8 +34,8 @@ const DashboardSidebar = () => {
               to={link.path}
               className={`rounded-xl px-4 py-3 text-sm transition-all ${
                 isActive
-                  ? 'bg-[#95EF90] text-black font-medium'
-                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+                  ? 'bg-[#95EF90] text-black font-medium shadow-[0_10px_24px_rgba(149,239,144,0.18)]'
+                  : 'text-[var(--app-muted)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--app-heading)]'
               }`}
             >
               {link.label}
