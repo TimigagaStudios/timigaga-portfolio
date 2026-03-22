@@ -15,7 +15,7 @@ const Footer = () => {
               <img
                 src="/images/timigaga-logo-icon.png"
                 alt="Timigaga Studios icon"
-                className="h-25 w-auto object-contain"
+                className="h-15 w-auto object-contain"
               />
 
               <div className="flex flex-col leading-none">
