@@ -168,7 +168,7 @@ const Navbar = () => {
                   </p>
 
                   <a
-                    href="mailto:Timigaga.official@gmail.com"
+                    href="mailto:contact.timigaga@gmail.com"
                     className="text-base font-medium block hover:text-[#95EF90] transition-colors"
                   >
                     contact.timigaga@gmail.com
