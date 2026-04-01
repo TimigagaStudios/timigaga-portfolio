@@ -103,7 +103,7 @@ const Footer = () => {
               href="mailto:contact.timigaga@gmail.com"
               className="text-base font-medium mb-3 block hover:text-[#95EF90] transition-colors"
             >
-              Timigaga.official@gmail.com
+              contact.timigaga@gmail.com
             </a>
 
             <a
