@@ -100,7 +100,7 @@ const Footer = () => {
             </h4>
 
             <a
-              href="mailto:Timigaga.official@gmail.com"
+              href="mailto:contact.timigaga@gmail.com"
               className="text-base font-medium mb-3 block hover:text-[#95EF90] transition-colors"
             >
               Timigaga.official@gmail.com
