@@ -45,7 +45,7 @@ const Contact = () => {
                     href="mailto:Timigaga.official@gmail.com"
                     className="text-lg md:text-xl font-medium tracking-tight hover:text-[#95EF90] transition-colors"
                   >
-                    Timigaga.official@gmail.com
+                    contact.timigaga@gmail.com
                   </a>
                 </div>
               </div>
@@ -117,7 +117,7 @@ const Contact = () => {
               </Button>
 
               <Button
-                href="mailto:Timigaga.official@gmail.com"
+                href="mailto:contact.timigaga@gmail.com"
                 variant="outline"
                 size="md"
                 className="text-[11px] uppercase tracking-[0.18em] font-semibold px-6"
